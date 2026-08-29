@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\services;
+namespace justinholtweb\friend\services;
 
 use Craft;
 use craft\base\Component;
@@ -8,11 +8,11 @@ use craft\db\Query;
 use craft\helpers\Db;
 use craft\helpers\StringHelper;
 use DateTime;
-use justinholtweb\friends\db\Table;
-use justinholtweb\friends\models\LogEntry;
-use justinholtweb\friends\models\Miss;
-use justinholtweb\friends\models\Outcome;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\db\Table;
+use justinholtweb\friend\models\LogEntry;
+use justinholtweb\friend\models\Miss;
+use justinholtweb\friend\models\Outcome;
+use justinholtweb\friend\Plugin;
 use Throwable;
 
 /**

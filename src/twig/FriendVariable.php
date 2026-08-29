@@ -1,22 +1,22 @@
 <?php
 
-namespace justinholtweb\friends\twig;
+namespace justinholtweb\friend\twig;
 
-use justinholtweb\friends\models\Candidate;
-use justinholtweb\friends\models\Miss;
-use justinholtweb\friends\models\Outcome;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\models\Candidate;
+use justinholtweb\friend\models\Miss;
+use justinholtweb\friend\models\Outcome;
+use justinholtweb\friend\Plugin;
 use yii\base\BaseObject;
 
 /**
- * `craft.friends` — what a 404 template can ask.
+ * `craft.friend` — what a 404 template can ask.
  *
  * The interesting case is a rule set to *suggest* rather than redirect, or one whose best
- * candidate did not clear the threshold. Friends stays out of the way, the site's own 404
+ * candidate did not clear the threshold. Friend stays out of the way, the site's own 404
  * template renders, and it can offer the near-misses as a "did you mean" list — a much lower bar
  * than moving somebody automatically, and often the more useful answer.
  */
-class FriendsVariable extends BaseObject
+class FriendVariable extends BaseObject
 {
     /**
      * The candidates for the current request, best first.
@@ -31,7 +31,7 @@ class FriendsVariable extends BaseObject
     }
 
     /**
-     * Everything Friends decided about a URI — the current request's by default.
+     * Everything Friend decided about a URI — the current request's by default.
      */
     public function outcome(?string $uri = null): ?Outcome
     {
@@ -62,7 +62,7 @@ class FriendsVariable extends BaseObject
         return Plugin::getInstance()->getMatcher()->currentOutcome()?->miss?->uri ?? '';
     }
 
-    /** Whether Friends is switched on at all. Handy for a template that wants to say so. */
+    /** Whether Friend is switched on at all. Handy for a template that wants to say so. */
     public function enabled(): bool
     {
         return Plugin::getInstance()->getSettings()->enabled;

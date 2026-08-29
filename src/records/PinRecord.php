@@ -1,9 +1,9 @@
 <?php
 
-namespace justinholtweb\friends\records;
+namespace justinholtweb\friend\records;
 
 use craft\db\ActiveRecord;
-use justinholtweb\friends\db\Table;
+use justinholtweb\friend\db\Table;
 
 /**
  * @property int $id

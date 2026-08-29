@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\controllers;
+namespace justinholtweb\friend\controllers;
 
 use Craft;
 use craft\elements\Category;
@@ -11,8 +11,8 @@ use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craft\web\View;
 use craft\web\assets\admintable\AdminTableAsset;
-use justinholtweb\friends\models\Rule;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\models\Rule;
+use justinholtweb\friend\Plugin;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -52,9 +52,9 @@ class RulesController extends Controller
         $this->getView()->registerAssetBundle(AdminTableAsset::class);
         $this->getView()->registerJs($this->_indexJs($tableData), View::POS_END);
 
-        return $this->renderTemplate('friends/rules/_index', [
+        return $this->renderTemplate('friend/rules/_index', [
             'rules' => $rules,
-            'newRuleUrl' => UrlHelper::cpUrl('friends/rules/new'),
+            'newRuleUrl' => UrlHelper::cpUrl('friend/rules/new'),
         ]);
     }
 
@@ -72,14 +72,14 @@ class RulesController extends Controller
             }
         }
 
-        return $this->renderTemplate('friends/rules/_edit', [
+        return $this->renderTemplate('friend/rules/_edit', [
             'rule' => $rule,
             'isNew' => !$rule->id,
-            'title' => $rule->id ? (string)$rule->name : Craft::t('friends', 'New rule'),
+            'title' => $rule->id ? (string)$rule->name : Craft::t('friend', 'New rule'),
             'elementTypeOptions' => $this->_options(Rule::elementTypeOptions()),
             'actionOptions' => $this->_options(Rule::actions()),
             'statusCodeOptions' => array_merge(
-                [['value' => '', 'label' => Craft::t('friends', 'Use the plugin default')]],
+                [['value' => '', 'label' => Craft::t('friend', 'Use the plugin default')]],
                 $this->_options(Rule::statusCodes())
             ),
             'methodOptions' => $this->_options(Rule::methodLabels()),
@@ -142,7 +142,7 @@ class RulesController extends Controller
         $rule->candidateLimit = $this->_int($this->request->getBodyParam('candidateLimit'));
 
         // Posted as `ruleAction`, not `action`: `action` is how Craft is told which controller to
-        // run, so a select named that would overwrite `friends/rules/save` with `redirect` and the
+        // run, so a select named that would overwrite `friend/rules/save` with `redirect` and the
         // request would 404 on a route nobody wrote — before this method ever ran.
         $rule->action = (string)$this->request->getBodyParam('ruleAction', Rule::ACTION_REDIRECT);
         $rule->statusCode = $this->_int($this->request->getBodyParam('statusCode'));
@@ -150,14 +150,14 @@ class RulesController extends Controller
         $rule->fallbackUrl = $this->_string($this->request->getBodyParam('fallbackUrl'));
 
         if (!$service->saveRule($rule)) {
-            $this->setFailFlash(Craft::t('friends', 'Couldn’t save the rule.'));
+            $this->setFailFlash(Craft::t('friend', 'Couldn’t save the rule.'));
 
             Craft::$app->getUrlManager()->setRouteParams(['rule' => $rule]);
 
             return null;
         }
 
-        $this->setSuccessFlash(Craft::t('friends', 'Rule saved.'));
+        $this->setSuccessFlash(Craft::t('friend', 'Rule saved.'));
 
         return $this->redirectToPostedUrl($rule);
     }
@@ -170,10 +170,10 @@ class RulesController extends Controller
         $id = (int)$this->request->getRequiredBodyParam('id');
 
         if (!Plugin::getInstance()->getRules()->deleteRuleById($id)) {
-            return $this->asFailure(Craft::t('friends', 'Couldn’t delete the rule.'));
+            return $this->asFailure(Craft::t('friend', 'Couldn’t delete the rule.'));
         }
 
-        return $this->asSuccess(Craft::t('friends', 'Rule deleted.'));
+        return $this->asSuccess(Craft::t('friend', 'Rule deleted.'));
     }
 
     public function actionReorder(): Response
@@ -184,10 +184,10 @@ class RulesController extends Controller
         $ids = Json::decode($this->request->getRequiredBodyParam('ids'));
 
         if (!Plugin::getInstance()->getRules()->reorderRules($ids)) {
-            return $this->asFailure(Craft::t('friends', 'Couldn’t reorder the rules.'));
+            return $this->asFailure(Craft::t('friend', 'Couldn’t reorder the rules.'));
         }
 
-        return $this->asSuccess(Craft::t('friends', 'Rules reordered.'));
+        return $this->asSuccess(Craft::t('friend', 'Rules reordered.'));
     }
 
     // ------------------------------------------------------------------
@@ -265,12 +265,12 @@ class RulesController extends Controller
     private function _indexJs(array $tableData): string
     {
         $data = Json::encode($tableData);
-        $empty = Json::encode(Craft::t('friends', 'No rules yet.'));
-        $actionLabel = Json::encode(Craft::t('friends', 'What it does'));
-        $thresholdLabel = Json::encode(Craft::t('friends', 'Threshold'));
+        $empty = Json::encode(Craft::t('friend', 'No rules yet.'));
+        $actionLabel = Json::encode(Craft::t('friend', 'What it does'));
+        $thresholdLabel = Json::encode(Craft::t('friend', 'Threshold'));
         $enabledLabel = Json::encode(Craft::t('app', 'Enabled'));
-        $reorderOk = Json::encode(Craft::t('friends', 'Rules reordered.'));
-        $reorderFail = Json::encode(Craft::t('friends', 'Couldn’t reorder the rules.'));
+        $reorderOk = Json::encode(Craft::t('friend', 'Rules reordered.'));
+        $reorderFail = Json::encode(Craft::t('friend', 'Couldn’t reorder the rules.'));
 
         return <<<JS
 new Craft.VueAdminTable({
@@ -286,11 +286,11 @@ new Craft.VueAdminTable({
             }
         }
     ],
-    container: '#friends-rules',
-    deleteAction: 'friends/rules/delete',
+    container: '#friend-rules',
+    deleteAction: 'friend/rules/delete',
     emptyMessage: {$empty},
     padded: true,
-    reorderAction: 'friends/rules/reorder',
+    reorderAction: 'friend/rules/reorder',
     reorderSuccessMessage: {$reorderOk},
     reorderFailMessage: {$reorderFail},
     tableData: {$data}

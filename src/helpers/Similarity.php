@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\helpers;
+namespace justinholtweb\friend\helpers;
 
 use craft\helpers\StringHelper;
 

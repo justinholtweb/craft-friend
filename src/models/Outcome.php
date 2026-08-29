@@ -1,11 +1,11 @@
 <?php
 
-namespace justinholtweb\friends\models;
+namespace justinholtweb\friend\models;
 
 use craft\base\Model;
 
 /**
- * What Friends decided about one miss.
+ * What Friend decided about one miss.
  *
  * Always returned, even when nothing matched — a "no" carrying its reasons is what the log and the
  * tester are both built on.

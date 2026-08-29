@@ -1,21 +1,21 @@
 <?php
 
-namespace justinholtweb\friends\console\controllers;
+namespace justinholtweb\friend\console\controllers;
 
 use craft\console\Controller;
 use craft\helpers\Console;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\Plugin;
 use yii\console\ExitCode;
 
 /**
- * `php craft friends/log/…`
+ * `php craft friend/log/…`
  */
 class LogController extends Controller
 {
     /** How many rows to show. */
     public int $limit = 25;
 
-    /** Only rows Friends did not resolve. */
+    /** Only rows Friend did not resolve. */
     public bool $unresolved = false;
 
     public function options($actionID): array

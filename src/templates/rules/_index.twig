@@ -1,16 +1,16 @@
 {% extends "_layouts/cp" %}
 
-{% set title = "Rules"|t('friends') %}
+{% set title = "Rules"|t('friend') %}
 {% set selectedSubnavItem = 'rules' %}
 
 {% block actionButton %}
-    <a href="{{ newRuleUrl }}" class="btn submit add icon">{{ "New rule"|t('friends') }}</a>
+    <a href="{{ newRuleUrl }}" class="btn submit add icon">{{ "New rule"|t('friend') }}</a>
 {% endblock %}
 
 {% block content %}
     <p class="light">
-        {{ "Rules are consulted top to bottom, and the first one that *decides* wins. Declining because nothing cleared its threshold is not a decision — the next rule gets a turn."|t('friends')|md(inlineOnly=true) }}
+        {{ "Rules are consulted top to bottom, and the first one that *decides* wins. Declining because nothing cleared its threshold is not a decision — the next rule gets a turn."|t('friend')|md(inlineOnly=true) }}
     </p>
 
-    <div id="friends-rules"></div>
+    <div id="friend-rules"></div>
 {% endblock %}

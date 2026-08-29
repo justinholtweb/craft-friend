@@ -1,19 +1,19 @@
-# Friends
+# Friend
 
-**Every dead URL has a friend.** When a page 404s, Friends looks for the entry the visitor was
+**Every dead URL has a friend.** When a page 404s, Friend looks for the entry the visitor was
 probably after and sends them there — under rules you write, with a threshold you set, and a log
 of every guess it made.
 
 Free, no editions, no licence key.
 
 ```sh
-composer require justinholtweb/craft-friends
-php craft plugin/install friends
+composer require justinholtweb/craft-friend
+php craft plugin/install friend
 ```
 
 Craft 5.3+, PHP 8.2+. No build step; no runtime dependencies beyond Craft's own.
 
-Reference point: the WordPress *404 Auto Redirect to Similar Post* plugin. Friends covers the same
+Reference point: the WordPress *404 Auto Redirect to Similar Post* plugin. Friend covers the same
 ground and then some — because in WordPress "similar post" is one search across one post table,
 and in Craft you need to say *which* elements are eligible, *when*, and *how sure* the match has to
 be before a visitor gets moved.
@@ -32,7 +32,7 @@ true, and they need three different answers:
 3. **Nobody knows.** A scanner asking for `/wp-login.php`. The right answer is to stay 404, and to
    never even try.
 
-Friends installs with a rule for the first case already switched on, an example for the second
+Friend installs with a rule for the first case already switched on, an example for the second
 switched off to read, and guards for the third.
 
 ## How a 404 is decided
@@ -86,11 +86,11 @@ blend and honest about what it means.
 
 ## Seeing why
 
-**Friends → Tester** takes a URL and shows the entire decision: every rule considered, why each
+**Friend → Tester** takes a URL and shows the entire decision: every rule considered, why each
 was skipped or declined, and the ranked candidates with their score breakdown.
 
 ```
-$ php craft friends/match/test blog/2019/our-new-offices
+$ php craft friend/match/test blog/2019/our-new-offices
 
   blog/2019/our-new-offices
   site: Main   slug: our-new-offices   tokens: blog, 2019, our, new, office
@@ -122,7 +122,7 @@ Set a rule's action to **Suggestions** — or just let a rule decline — and of
 instead of moving anyone:
 
 ```twig
-{% set suggestions = craft.friends.suggestions(5) %}
+{% set suggestions = craft.friend.suggestions(5) %}
 
 {% if suggestions %}
     <h2>Did you mean…</h2>
@@ -139,10 +139,10 @@ instead of moving anyone:
 
 | tag | what it gives you |
 | --- | --- |
-| `craft.friends.suggestions(limit, uri)` | ranked candidates, best first |
-| `craft.friends.best(uri)` | the single winning candidate, or null |
-| `craft.friends.outcome(uri)` | everything Friends decided, traces included |
-| `craft.friends.missedUri()` | the path that 404'd, in normal form |
+| `craft.friend.suggestions(limit, uri)` | ranked candidates, best first |
+| `craft.friend.best(uri)` | the single winning candidate, or null |
+| `craft.friend.outcome(uri)` | everything Friend decided, traces included |
+| `craft.friend.missedUri()` | the path that 404'd, in normal form |
 
 Every one of them takes an optional URI, so the same tags work on any page, not just a 404.
 
@@ -152,7 +152,7 @@ The WordPress plugin defaults to 301. A 301 is cached by the browser and by ever
 and your server, often for far longer than anyone intends — so a *guessed* permanent redirect that
 guesses wrong leaves a visitor unable to reach that URL again even after you fix the rule.
 
-Friends defaults to **302**, and a rule can opt into 301 once its column in the log has convinced
+Friend defaults to **302**, and a rule can opt into 301 once its column in the log has convinced
 you it gets the answer right.
 
 ## Guards
@@ -170,19 +170,19 @@ Checked before any rule, and not overridable per rule:
 
 ## `config/redirects.php`
 
-Craft 5.6 added its own static redirect file. Friends hooks the top of Craft's exception handling,
+Craft 5.6 added its own static redirect file. Friend hooks the top of Craft's exception handling,
 which is *before* Craft reads it — so without help, a fuzzy guess would quietly outrank an explicit
-instruction. Friends checks that file first and stands down when a rule in it already matches.
+instruction. Friend checks that file first and stands down when a rule in it already matches.
 Explicit beats inferred. Switch it off in the settings if you want the opposite.
 
 ## Console
 
 ```sh
-php craft friends/match/test <uri> [--site=handle] [--all]   # resolve a URI, print the reasoning
-php craft friends/match/rules                                # the rule set in evaluation order
-php craft friends/log [--limit=25] [--unresolved]            # the busiest 404s
-php craft friends/log/prune                                  # apply the retention settings now
-php craft friends/log/clear                                  # empty the log
+php craft friend/match/test <uri> [--site=handle] [--all]   # resolve a URI, print the reasoning
+php craft friend/match/rules                                # the rule set in evaluation order
+php craft friend/log [--limit=25] [--unresolved]            # the busiest 404s
+php craft friend/log/prune                                  # apply the retention settings now
+php craft friend/log/clear                                  # empty the log
 ```
 
 ## Performance

@@ -1,13 +1,13 @@
 <?php
 
-namespace justinholtweb\friends\models;
+namespace justinholtweb\friend\models;
 
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Model;
 use craft\helpers\UrlHelper;
 use DateTime;
-use justinholtweb\friends\helpers\Uris;
+use justinholtweb\friend\helpers\Uris;
 
 /**
  * A stored exact mapping for one URI.
@@ -85,7 +85,7 @@ class Pin extends Model
 
     public function getCpEditUrl(): string
     {
-        return UrlHelper::cpUrl('friends/pins/' . $this->id);
+        return UrlHelper::cpUrl('friend/pins/' . $this->id);
     }
 
     protected function defineRules(): array
@@ -105,16 +105,16 @@ class Pin extends Model
     {
         if ($this->targetType === self::TARGET_ELEMENT) {
             if (!$this->elementId) {
-                $this->addError('elementId', Craft::t('friends', 'Pick something to point at.'));
+                $this->addError('elementId', Craft::t('friend', 'Pick something to point at.'));
             } elseif ($this->getElement() === null) {
-                $this->addError('elementId', Craft::t('friends', 'That element no longer exists.'));
+                $this->addError('elementId', Craft::t('friend', 'That element no longer exists.'));
             }
 
             return;
         }
 
         if (trim((string)$this->url) === '') {
-            $this->addError('url', Craft::t('friends', 'A pin needs somewhere to go.'));
+            $this->addError('url', Craft::t('friend', 'A pin needs somewhere to go.'));
         }
     }
 

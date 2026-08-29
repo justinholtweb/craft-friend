@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\web\assets\cp;
+namespace justinholtweb\friend\web\assets\cp;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset as CraftCpAsset;
@@ -17,5 +17,5 @@ class CpAsset extends AssetBundle
 
     public $depends = [CraftCpAsset::class];
 
-    public $css = ['friends-cp.css'];
+    public $css = ['friend-cp.css'];
 }

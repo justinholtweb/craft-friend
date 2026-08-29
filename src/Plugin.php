@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends;
+namespace justinholtweb\friend;
 
 use Craft;
 use craft\base\Model;
@@ -13,17 +13,17 @@ use craft\services\UserPermissions;
 use craft\web\ErrorHandler;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
-use justinholtweb\friends\models\Settings;
-use justinholtweb\friends\services\Candidates;
-use justinholtweb\friends\services\Log;
-use justinholtweb\friends\services\Matcher;
-use justinholtweb\friends\services\Pins;
-use justinholtweb\friends\services\Rules;
-use justinholtweb\friends\twig\FriendsVariable;
+use justinholtweb\friend\models\Settings;
+use justinholtweb\friend\services\Candidates;
+use justinholtweb\friend\services\Log;
+use justinholtweb\friend\services\Matcher;
+use justinholtweb\friend\services\Pins;
+use justinholtweb\friend\services\Rules;
+use justinholtweb\friend\twig\FriendVariable;
 use yii\base\Event;
 
 /**
- * Friends — every dead URL has a friend.
+ * Friend — every dead URL has a friend.
  *
  * @property-read Rules $rules
  * @property-read Pins $pins
@@ -36,12 +36,12 @@ use yii\base\Event;
  */
 class Plugin extends BasePlugin
 {
-    public const PERMISSION_VIEW = 'friends:viewLog';
-    public const PERMISSION_MANAGE_RULES = 'friends:manageRules';
-    public const PERMISSION_MANAGE_PINS = 'friends:managePins';
+    public const PERMISSION_VIEW = 'friend:viewLog';
+    public const PERMISSION_MANAGE_RULES = 'friend:manageRules';
+    public const PERMISSION_MANAGE_PINS = 'friend:managePins';
 
     /** Log category used by everything in the plugin. */
-    public const LOG_CATEGORY = 'friends';
+    public const LOG_CATEGORY = 'friend';
 
     public string $schemaVersion = '1.0.0';
     public bool $hasCpSection = true;
@@ -99,7 +99,7 @@ class Plugin extends BasePlugin
     public function getCpNavItem(): ?array
     {
         $item = parent::getCpNavItem();
-        $item['label'] = Craft::t('friends', 'Friends');
+        $item['label'] = Craft::t('friend', 'Friend');
 
         $user = Craft::$app->getUser();
 
@@ -107,32 +107,32 @@ class Plugin extends BasePlugin
 
         if ($user->checkPermission(self::PERMISSION_MANAGE_RULES) || $user->getIsAdmin()) {
             $item['subnav']['rules'] = [
-                'label' => Craft::t('friends', 'Rules'),
-                'url' => 'friends/rules',
+                'label' => Craft::t('friend', 'Rules'),
+                'url' => 'friend/rules',
             ];
         }
 
         $item['subnav']['log'] = [
-            'label' => Craft::t('friends', '404 log'),
-            'url' => 'friends/log',
+            'label' => Craft::t('friend', '404 log'),
+            'url' => 'friend/log',
         ];
 
         if ($user->checkPermission(self::PERMISSION_MANAGE_PINS) || $user->getIsAdmin()) {
             $item['subnav']['pins'] = [
-                'label' => Craft::t('friends', 'Pins'),
-                'url' => 'friends/pins',
+                'label' => Craft::t('friend', 'Pins'),
+                'url' => 'friend/pins',
             ];
         }
 
         $item['subnav']['tester'] = [
-            'label' => Craft::t('friends', 'Tester'),
-            'url' => 'friends/tester',
+            'label' => Craft::t('friend', 'Tester'),
+            'url' => 'friend/tester',
         ];
 
         if ($user->getIsAdmin()) {
             $item['subnav']['settings'] = [
-                'label' => Craft::t('friends', 'Settings'),
-                'url' => 'settings/plugins/friends',
+                'label' => Craft::t('friend', 'Settings'),
+                'url' => 'settings/plugins/friend',
             ];
         }
 
@@ -146,7 +146,7 @@ class Plugin extends BasePlugin
 
     protected function settingsHtml(): ?string
     {
-        return Craft::$app->getView()->renderTemplate('friends/settings', [
+        return Craft::$app->getView()->renderTemplate('friend/settings', [
             'settings' => $this->getSettings(),
             'plugin' => $this,
         ]);
@@ -173,15 +173,15 @@ class Plugin extends BasePlugin
     {
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
             $event->rules += [
-                'friends' => 'friends/rules/index',
-                'friends/rules' => 'friends/rules/index',
-                'friends/rules/new' => 'friends/rules/edit',
-                'friends/rules/<ruleId:\d+>' => 'friends/rules/edit',
-                'friends/log' => 'friends/log/index',
-                'friends/pins' => 'friends/pins/index',
-                'friends/pins/new' => 'friends/pins/edit',
-                'friends/pins/<pinId:\d+>' => 'friends/pins/edit',
-                'friends/tester' => 'friends/tester/index',
+                'friend' => 'friend/rules/index',
+                'friend/rules' => 'friend/rules/index',
+                'friend/rules/new' => 'friend/rules/edit',
+                'friend/rules/<ruleId:\d+>' => 'friend/rules/edit',
+                'friend/log' => 'friend/log/index',
+                'friend/pins' => 'friend/pins/index',
+                'friend/pins/new' => 'friend/pins/edit',
+                'friend/pins/<pinId:\d+>' => 'friend/pins/edit',
+                'friend/tester' => 'friend/tester/index',
             ];
         });
     }
@@ -190,16 +190,16 @@ class Plugin extends BasePlugin
     {
         Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
             $event->permissions[] = [
-                'heading' => Craft::t('friends', 'Friends'),
+                'heading' => Craft::t('friend', 'Friend'),
                 'permissions' => [
                     self::PERMISSION_VIEW => [
-                        'label' => Craft::t('friends', 'View the 404 log'),
+                        'label' => Craft::t('friend', 'View the 404 log'),
                         'nested' => [
                             self::PERMISSION_MANAGE_PINS => [
-                                'label' => Craft::t('friends', 'Create and edit pins'),
+                                'label' => Craft::t('friend', 'Create and edit pins'),
                             ],
                             self::PERMISSION_MANAGE_RULES => [
-                                'label' => Craft::t('friends', 'Create and edit rules'),
+                                'label' => Craft::t('friend', 'Create and edit rules'),
                             ],
                         ],
                     ],
@@ -211,7 +211,7 @@ class Plugin extends BasePlugin
     private function registerTwig(): void
     {
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
-            $event->sender->set('friends', FriendsVariable::class);
+            $event->sender->set('friend', FriendVariable::class);
         });
     }
 

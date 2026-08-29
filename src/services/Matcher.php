@@ -1,19 +1,19 @@
 <?php
 
-namespace justinholtweb\friends\services;
+namespace justinholtweb\friend\services;
 
 use Craft;
 use craft\base\Component;
 use craft\web\Request as WebRequest;
 use craft\web\RedirectRule;
-use justinholtweb\friends\helpers\Uris;
-use justinholtweb\friends\models\Candidate;
-use justinholtweb\friends\models\Miss;
-use justinholtweb\friends\models\Outcome;
-use justinholtweb\friends\models\Pin;
-use justinholtweb\friends\models\Rule;
-use justinholtweb\friends\models\Trace;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\helpers\Uris;
+use justinholtweb\friend\models\Candidate;
+use justinholtweb\friend\models\Miss;
+use justinholtweb\friend\models\Outcome;
+use justinholtweb\friend\models\Pin;
+use justinholtweb\friend\models\Rule;
+use justinholtweb\friend\models\Trace;
+use justinholtweb\friend\Plugin;
 use Throwable;
 use yii\web\HttpException;
 
@@ -70,7 +70,7 @@ class Matcher extends Component
             return;
         }
 
-        // Friends runs *first*, so an explicit `config/redirects.php` rule would otherwise never
+        // Friend runs *first*, so an explicit `config/redirects.php` rule would otherwise never
         // get a look in. Explicit beats inferred: if that file already covers this URI, stand
         // down and let Craft do its own thing three lines further down its own method.
         if ($settings->honourConfigRedirects && $this->configRedirectCovers($miss->uri)) {
@@ -261,9 +261,9 @@ class Matcher extends Component
 
                 if ($withTraces) {
                     $outcome->traces[] = new Trace([
-                        'ruleName' => Craft::t('friends', 'Pin'),
+                        'ruleName' => Craft::t('friend', 'Pin'),
                         'status' => Trace::MATCHED,
-                        'reason' => Craft::t('friends', 'A pin covers this URI, so no rule was consulted.'),
+                        'reason' => Craft::t('friend', 'A pin covers this URI, so no rule was consulted.'),
                         'bestScore' => 100.0,
                         'candidateCount' => 1,
                     ]);
@@ -306,7 +306,7 @@ class Matcher extends Component
 
         if ($rule->action === Rule::ACTION_IGNORE) {
             $trace->status = Trace::IGNORED;
-            $trace->reason = Craft::t('friends', 'The rule matched and is set to do nothing, so no later rule was consulted.');
+            $trace->reason = Craft::t('friend', 'The rule matched and is set to do nothing, so no later rule was consulted.');
 
             $outcome->source = Outcome::SOURCE_RULE;
             $outcome->rule = $rule;
@@ -324,10 +324,10 @@ class Matcher extends Component
         if ($best === null || $best->score < $rule->threshold || $best->url === null) {
             if ($best === null) {
                 $trace->status = Trace::NO_CANDIDATES;
-                $trace->reason = Craft::t('friends', 'Nothing came back from any of its retrieval methods.');
+                $trace->reason = Craft::t('friend', 'Nothing came back from any of its retrieval methods.');
             } else {
                 $trace->status = Trace::BELOW_THRESHOLD;
-                $trace->reason = Craft::t('friends', 'Best score {score} is under the rule’s threshold of {threshold}.', [
+                $trace->reason = Craft::t('friend', 'Best score {score} is under the rule’s threshold of {threshold}.', [
                     'score' => $best->score,
                     'threshold' => $rule->threshold,
                 ]);
@@ -343,14 +343,14 @@ class Matcher extends Component
 
         if ($rule->action === Rule::ACTION_SUGGEST) {
             $trace->status = Trace::SUGGESTED;
-            $trace->reason = Craft::t('friends', 'Matched, but the rule offers suggestions rather than redirecting.');
+            $trace->reason = Craft::t('friend', 'Matched, but the rule offers suggestions rather than redirecting.');
             $outcome->action = Rule::ACTION_SUGGEST;
 
             return true;
         }
 
         $trace->status = Trace::MATCHED;
-        $trace->reason = Craft::t('friends', 'Redirecting to {uri}.', ['uri' => $best->uri]);
+        $trace->reason = Craft::t('friend', 'Redirecting to {uri}.', ['uri' => $best->uri]);
 
         $outcome->action = Rule::ACTION_REDIRECT;
         $outcome->targetUrl = $best->url;
@@ -378,7 +378,7 @@ class Matcher extends Component
         $settings = Plugin::getInstance()->getSettings();
 
         $trace->status = Trace::MATCHED;
-        $trace->reason = Craft::t('friends', 'Nothing cleared the threshold, so the rule’s fallback URL was used.');
+        $trace->reason = Craft::t('friend', 'Nothing cleared the threshold, so the rule’s fallback URL was used.');
 
         $outcome->source = Outcome::SOURCE_RULE;
         $outcome->rule = $rule;
@@ -393,28 +393,28 @@ class Matcher extends Component
     private function _whyRuleDoesNotApply(Rule $rule, Miss $miss): ?string
     {
         if (!$rule->appliesToSite($miss->siteId)) {
-            return Craft::t('friends', 'Limited to other sites.');
+            return Craft::t('friend', 'Limited to other sites.');
         }
 
         if ($rule->uriPattern && !Uris::matchesPattern($miss->uri, $rule->uriPattern)) {
-            return Craft::t('friends', 'The URI does not match `{pattern}`.', ['pattern' => $rule->uriPattern]);
+            return Craft::t('friend', 'The URI does not match `{pattern}`.', ['pattern' => $rule->uriPattern]);
         }
 
         if ($rule->excludePatterns && Uris::matchesAny($miss->uri, $rule->excludePatterns)) {
-            return Craft::t('friends', 'The URI matches one of the rule’s exclusions.');
+            return Craft::t('friend', 'The URI matches one of the rule’s exclusions.');
         }
 
         $segments = count($miss->segments);
 
         if ($rule->minSegments && $segments < $rule->minSegments) {
-            return Craft::t('friends', 'The path has {count} segments; the rule wants at least {min}.', [
+            return Craft::t('friend', 'The path has {count} segments; the rule wants at least {min}.', [
                 'count' => $segments,
                 'min' => $rule->minSegments,
             ]);
         }
 
         if ($rule->maxSegments && $segments > $rule->maxSegments) {
-            return Craft::t('friends', 'The path has {count} segments; the rule wants at most {max}.', [
+            return Craft::t('friend', 'The path has {count} segments; the rule wants at most {max}.', [
                 'count' => $segments,
                 'max' => $rule->maxSegments,
             ]);
@@ -439,7 +439,7 @@ class Matcher extends Component
     /**
      * The outcome for the request in flight, resolved on demand.
      *
-     * A 404 template calling `craft.friends.suggestions()` on a site where every rule is set to
+     * A 404 template calling `craft.friend.suggestions()` on a site where every rule is set to
      * redirect will find nothing resolved yet — no rule decided, so nothing was stored. Resolving
      * lazily means the tag works the same either way.
      */
@@ -474,7 +474,7 @@ class Matcher extends Component
     /**
      * Bumping a generation counter beats deleting keys.
      *
-     * There is one cache entry per dead URL and no index of them, so "forget everything Friends
+     * There is one cache entry per dead URL and no index of them, so "forget everything Friend
      * decided" cannot be expressed as a list of keys to delete. Folding a counter into the key
      * makes the whole previous generation unreachable in one write, and lets the old entries age
      * out on their own.
@@ -485,17 +485,17 @@ class Matcher extends Component
         $this->_generation = null;
 
         $cache = Craft::$app->getCache();
-        $cache->set('friends:generation', (int)$cache->get('friends:generation') + 1);
+        $cache->set('friend:generation', (int)$cache->get('friend:generation') + 1);
     }
 
     private function _generation(): int
     {
-        return $this->_generation ??= (int)Craft::$app->getCache()->get('friends:generation');
+        return $this->_generation ??= (int)Craft::$app->getCache()->get('friend:generation');
     }
 
     private function _cacheKey(Miss $miss): string
     {
-        return sprintf('friends:m:%d:%d:%s', $this->_generation(), $miss->siteId, sha1($miss->uri));
+        return sprintf('friend:m:%d:%d:%s', $this->_generation(), $miss->siteId, sha1($miss->uri));
     }
 
     private function _readCache(Miss $miss): ?Outcome

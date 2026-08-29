@@ -3,18 +3,18 @@
 
 {% set selectedSubnavItem = 'rules' %}
 {% set fullPageForm = true %}
-{% set crumbs = [{ label: "Friends"|t('friends'), url: url('friends/rules') }] %}
+{% set crumbs = [{ label: "Friend"|t('friend'), url: url('friend/rules') }] %}
 
 {% set tabs = {
-    what: { label: "What it does"|t('friends'), url: '#what-tab' },
-    when: { label: "When it applies"|t('friends'), url: '#when-tab' },
-    where: { label: "Where it may point"|t('friends'), url: '#where-tab' },
-    how: { label: "How sure it must be"|t('friends'), url: '#how-tab' },
+    what: { label: "What it does"|t('friend'), url: '#what-tab' },
+    when: { label: "When it applies"|t('friend'), url: '#when-tab' },
+    where: { label: "Where it may point"|t('friend'), url: '#where-tab' },
+    how: { label: "How sure it must be"|t('friend'), url: '#how-tab' },
 } %}
 
 {% block content %}
-    <input type="hidden" name="action" value="friends/rules/save">
-    {{ redirectInput('friends/rules') }}
+    <input type="hidden" name="action" value="friend/rules/save">
+    {{ redirectInput('friend/rules') }}
     {% if rule.id %}<input type="hidden" name="id" value="{{ rule.id }}">{% endif %}
 
     <div id="what-tab">
@@ -40,7 +40,7 @@
 
         {{ forms.textareaField({
             label: "Description"|t('app'),
-            instructions: "For whoever reads this list in a year."|t('friends'),
+            instructions: "For whoever reads this list in a year."|t('friend'),
             id: 'description',
             name: 'description',
             value: rule.description,
@@ -55,8 +55,8 @@
         }) }}
 
         {{ forms.selectField({
-            label: "Action"|t('friends'),
-            instructions: "**Redirect** moves the visitor. **Suggestions** leaves them on your 404 template with a “did you mean” list from `craft.friends.suggestions()`. **Do nothing** matches the URI on purpose and stops — how you exclude a whole branch of the site from every rule below."|t('friends'),
+            label: "Action"|t('friend'),
+            instructions: "**Redirect** moves the visitor. **Suggestions** leaves them on your 404 template with a “did you mean” list from `craft.friend.suggestions()`. **Do nothing** matches the URI on purpose and stops — how you exclude a whole branch of the site from every rule below."|t('friend'),
             id: 'ruleAction',
             name: 'ruleAction',
             value: rule.action,
@@ -65,8 +65,8 @@
         }) }}
 
         {{ forms.selectField({
-            label: "Redirect status"|t('friends'),
-            instructions: "Leave on the default until this rule's row in the 404 log convinces you it gets the answer right — a wrong 301 is cached in browsers you cannot reach."|t('friends'),
+            label: "Redirect status"|t('friend'),
+            instructions: "Leave on the default until this rule's row in the 404 log convinces you it gets the answer right — a wrong 301 is cached in browsers you cannot reach."|t('friend'),
             id: 'statusCode',
             name: 'statusCode',
             value: rule.statusCode,
@@ -75,22 +75,22 @@
         }) }}
 
         {{ forms.selectField({
-            label: "If nothing clears the threshold"|t('friends'),
+            label: "If nothing clears the threshold"|t('friend'),
             id: 'fallback',
             name: 'fallback',
             value: rule.fallback,
             options: [
-                { value: 'none', label: "Let the next rule try"|t('friends') },
-                { value: 'url', label: "Send them somewhere anyway"|t('friends') },
+                { value: 'none', label: "Let the next rule try"|t('friend') },
+                { value: 'url', label: "Send them somewhere anyway"|t('friend') },
             ],
             toggle: true,
-            targetPrefix: '.friends-fallback-',
+            targetPrefix: '.friend-fallback-',
         }) }}
 
-        <div class="friends-fallback-url {{ rule.fallback == 'url' ? '' : 'hidden' }}">
+        <div class="friend-fallback-url {{ rule.fallback == 'url' ? '' : 'hidden' }}">
             {{ forms.textField({
-                label: "Fallback URL"|t('friends'),
-                instructions: "A site URI like `blog`, or a full URL. Use sparingly: a fallback turns every unresolved 404 under this rule into a redirect, which hides the broken links rather than showing them to you."|t('friends'),
+                label: "Fallback URL"|t('friend'),
+                instructions: "A site URI like `blog`, or a full URL. Use sparingly: a fallback turns every unresolved 404 under this rule into a redirect, which hides the broken links rather than showing them to you."|t('friend'),
                 id: 'fallbackUrl',
                 name: 'fallbackUrl',
                 class: 'code',
@@ -102,8 +102,8 @@
 
     <div id="when-tab" class="hidden">
         {{ forms.textField({
-            label: "Only URIs matching"|t('friends'),
-            instructions: "A glob like `blog/*`, or `re:` followed by a regular expression. Leave empty for every URI."|t('friends'),
+            label: "Only URIs matching"|t('friend'),
+            instructions: "A glob like `blog/*`, or `re:` followed by a regular expression. Leave empty for every URI."|t('friend'),
             id: 'uriPattern',
             name: 'uriPattern',
             class: 'code',
@@ -113,15 +113,15 @@
         }) }}
 
         {{ forms.editableTableField({
-            label: "Except"|t('friends'),
-            instructions: "Patterns that disqualify this rule even when the one above matched."|t('friends'),
+            label: "Except"|t('friend'),
+            instructions: "Patterns that disqualify this rule even when the one above matched."|t('friend'),
             id: 'excludePatterns',
             name: 'excludePatterns',
             cols: {
-                pattern: { type: 'singleline', heading: "URI pattern"|t('friends'), code: true },
+                pattern: { type: 'singleline', heading: "URI pattern"|t('friend'), code: true },
             },
             rows: rule.excludePatterns|map(p => { pattern: p }),
-            addRowLabel: "Add a pattern"|t('friends'),
+            addRowLabel: "Add a pattern"|t('friend'),
             allowAdd: true,
             allowDelete: true,
             allowReorder: true,
@@ -129,7 +129,7 @@
 
         <div class="flex">
             {{ forms.textField({
-                label: "Fewest path segments"|t('friends'),
+                label: "Fewest path segments"|t('friend'),
                 id: 'minSegments',
                 name: 'minSegments',
                 value: rule.minSegments,
@@ -139,7 +139,7 @@
             }) }}
 
             {{ forms.textField({
-                label: "Most path segments"|t('friends'),
+                label: "Most path segments"|t('friend'),
                 id: 'maxSegments',
                 name: 'maxSegments',
                 value: rule.maxSegments,
@@ -152,7 +152,7 @@
         {% if siteOptions|length > 1 %}
             {{ forms.checkboxSelectField({
                 label: "Sites"|t('app'),
-                instructions: "Leave everything unchecked for every site."|t('friends'),
+                instructions: "Leave everything unchecked for every site."|t('friend'),
                 id: 'siteIds',
                 name: 'siteIds',
                 values: rule.siteIds,
@@ -163,8 +163,8 @@
 
     <div id="where-tab" class="hidden">
         {{ forms.selectField({
-            label: "Element type"|t('friends'),
-            instructions: "Only types that have URLs are listed — a redirect to an element with no URL is not a redirect."|t('friends'),
+            label: "Element type"|t('friend'),
+            instructions: "Only types that have URLs are listed — a redirect to an element with no URL is not a redirect."|t('friend'),
             id: 'elementType',
             name: 'elementType',
             value: rule.elementType,
@@ -172,10 +172,10 @@
             errors: rule.getErrors('elementType'),
         }) }}
 
-        <div id="friends-entry-sources" class="{{ rule.elementType == entryTypeClass ? '' : 'hidden' }}">
+        <div id="friend-entry-sources" class="{{ rule.elementType == entryTypeClass ? '' : 'hidden' }}">
             {{ forms.checkboxSelectField({
                 label: "Sections"|t('app'),
-                instructions: "Leave everything unchecked for all of them."|t('friends'),
+                instructions: "Leave everything unchecked for all of them."|t('friend'),
                 id: 'sectionIds',
                 name: 'sectionIds',
                 values: rule.sectionIds,
@@ -191,7 +191,7 @@
             }) }}
         </div>
 
-        <div id="friends-category-sources" class="{{ rule.elementType == categoryTypeClass ? '' : 'hidden' }}">
+        <div id="friend-category-sources" class="{{ rule.elementType == categoryTypeClass ? '' : 'hidden' }}">
             {{ forms.checkboxSelectField({
                 label: "Category groups"|t('app'),
                 id: 'categoryGroupIds',
@@ -202,8 +202,8 @@
         </div>
 
         {{ forms.textField({
-            label: "Only under"|t('friends'),
-            instructions: "A URI prefix. Works for every element type, including ones this plugin has never heard of."|t('friends'),
+            label: "Only under"|t('friend'),
+            instructions: "A URI prefix. Works for every element type, including ones this plugin has never heard of."|t('friend'),
             id: 'uriPrefix',
             name: 'uriPrefix',
             class: 'code',
@@ -212,8 +212,8 @@
         }) }}
 
         {{ forms.lightswitchField({
-            label: "Live elements only"|t('friends'),
-            instructions: "Switching this off lets a disabled page become a redirect target, which is almost always a mistake."|t('friends'),
+            label: "Live elements only"|t('friend'),
+            instructions: "Switching this off lets a disabled page become a redirect target, which is almost always a mistake."|t('friend'),
             id: 'enabledOnly',
             name: 'enabledOnly',
             on: rule.enabledOnly,
@@ -222,8 +222,8 @@
 
     <div id="how-tab" class="hidden">
         {{ forms.checkboxSelectField({
-            label: "How to find candidates"|t('friends'),
-            instructions: "**Exact slug** is the strongest and cheapest — it is what a moved page looks like. **Word overlap** and the **search index** widen the net. **Nearest ancestor page** walks up the path instead of comparing text, and is scored on how much of the path survived."|t('friends'),
+            label: "How to find candidates"|t('friend'),
+            instructions: "**Exact slug** is the strongest and cheapest — it is what a moved page looks like. **Word overlap** and the **search index** widen the net. **Nearest ancestor page** walks up the path instead of comparing text, and is scored on how much of the path survived."|t('friend'),
             id: 'methods',
             name: 'methods',
             values: rule.methods,
@@ -232,21 +232,21 @@
         }) }}
 
         <div class="field">
-            <div class="heading"><label>{{ "Weights"|t('friends') }}</label></div>
-            <div class="instructions"><p>{{ "How much each dimension counts. Relative, not out of 100 — 3/1/1 means what it looks like."|t('friends') }}</p></div>
+            <div class="heading"><label>{{ "Weights"|t('friend') }}</label></div>
+            <div class="instructions"><p>{{ "How much each dimension counts. Relative, not out of 100 — 3/1/1 means what it looks like."|t('friend') }}</p></div>
             <div class="flex">
                 {{ forms.text({ id: 'weightSlug', name: 'weightSlug', value: rule.weightSlug, size: 4, type: 'number' }) }}
-                <span class="light" style="align-self: center;">{{ "slug"|t('friends') }}</span>
+                <span class="light" style="align-self: center;">{{ "slug"|t('friend') }}</span>
                 {{ forms.text({ id: 'weightTitle', name: 'weightTitle', value: rule.weightTitle, size: 4, type: 'number' }) }}
-                <span class="light" style="align-self: center;">{{ "title"|t('friends') }}</span>
+                <span class="light" style="align-self: center;">{{ "title"|t('friend') }}</span>
                 {{ forms.text({ id: 'weightPath', name: 'weightPath', value: rule.weightPath, size: 4, type: 'number' }) }}
-                <span class="light" style="align-self: center;">{{ "path"|t('friends') }}</span>
+                <span class="light" style="align-self: center;">{{ "path"|t('friend') }}</span>
             </div>
         </div>
 
         {{ forms.textField({
-            label: "Threshold"|t('friends'),
-            instructions: "0–100. The whole safety mechanism: below this the rule declines and the next one tries. Start high. The tester will tell you what real URLs score."|t('friends'),
+            label: "Threshold"|t('friend'),
+            instructions: "0–100. The whole safety mechanism: below this the rule declines and the next one tries. Start high. The tester will tell you what real URLs score."|t('friend'),
             id: 'threshold',
             name: 'threshold',
             value: rule.threshold,
@@ -256,8 +256,8 @@
         }) }}
 
         {{ forms.textField({
-            label: "Candidate limit"|t('friends'),
-            instructions: "Leave empty to use the plugin default."|t('friends'),
+            label: "Candidate limit"|t('friend'),
+            instructions: "Leave empty to use the plugin default."|t('friend'),
             id: 'candidateLimit',
             name: 'candidateLimit',
             value: rule.candidateLimit,
@@ -273,8 +273,8 @@
 {% js %}
 (function() {
     var select = document.getElementById('elementType');
-    var entrySources = document.getElementById('friends-entry-sources');
-    var categorySources = document.getElementById('friends-category-sources');
+    var entrySources = document.getElementById('friend-entry-sources');
+    var categorySources = document.getElementById('friend-category-sources');
 
     if (!select) {
         return;

@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\models;
+namespace justinholtweb\friend\models;
 
 use Craft;
 use craft\base\ElementInterface;
@@ -11,7 +11,7 @@ use craft\helpers\UrlHelper;
 use craft\validators\HandleValidator;
 use craft\validators\UniqueValidator;
 use DateTime;
-use justinholtweb\friends\records\RuleRecord;
+use justinholtweb\friend\records\RuleRecord;
 
 /**
  * One rule in the ordered set.
@@ -140,9 +140,9 @@ class Rule extends Model
     public static function actions(): array
     {
         return [
-            self::ACTION_REDIRECT => Craft::t('friends', 'Redirect to the best match'),
-            self::ACTION_SUGGEST => Craft::t('friends', 'Stay 404, offer suggestions'),
-            self::ACTION_IGNORE => Craft::t('friends', 'Do nothing, and stop here'),
+            self::ACTION_REDIRECT => Craft::t('friend', 'Redirect to the best match'),
+            self::ACTION_SUGGEST => Craft::t('friend', 'Stay 404, offer suggestions'),
+            self::ACTION_IGNORE => Craft::t('friend', 'Do nothing, and stop here'),
         ];
     }
 
@@ -150,10 +150,10 @@ class Rule extends Model
     public static function methodLabels(): array
     {
         return [
-            self::METHOD_SLUG => Craft::t('friends', 'Exact slug'),
-            self::METHOD_TOKENS => Craft::t('friends', 'Word overlap'),
-            self::METHOD_SEARCH => Craft::t('friends', 'Search index'),
-            self::METHOD_ANCESTOR => Craft::t('friends', 'Nearest ancestor page'),
+            self::METHOD_SLUG => Craft::t('friend', 'Exact slug'),
+            self::METHOD_TOKENS => Craft::t('friend', 'Word overlap'),
+            self::METHOD_SEARCH => Craft::t('friend', 'Search index'),
+            self::METHOD_ANCESTOR => Craft::t('friend', 'Nearest ancestor page'),
         ];
     }
 
@@ -161,10 +161,10 @@ class Rule extends Model
     public static function statusCodes(): array
     {
         return [
-            301 => Craft::t('friends', '301 — Moved permanently'),
-            302 => Craft::t('friends', '302 — Found (temporary)'),
-            307 => Craft::t('friends', '307 — Temporary redirect'),
-            308 => Craft::t('friends', '308 — Permanent redirect'),
+            301 => Craft::t('friend', '301 — Moved permanently'),
+            302 => Craft::t('friend', '302 — Found (temporary)'),
+            307 => Craft::t('friend', '307 — Temporary redirect'),
+            308 => Craft::t('friend', '308 — Permanent redirect'),
         ];
     }
 
@@ -217,7 +217,7 @@ class Rule extends Model
 
     public function getCpEditUrl(): string
     {
-        return UrlHelper::cpUrl('friends/rules/' . $this->id);
+        return UrlHelper::cpUrl('friend/rules/' . $this->id);
     }
 
     /**
@@ -243,7 +243,7 @@ class Rule extends Model
                 UniqueValidator::class,
                 'targetClass' => RuleRecord::class,
                 'targetAttribute' => 'handle',
-                'message' => Craft::t('friends', 'That handle is already in use.'),
+                'message' => Craft::t('friend', 'That handle is already in use.'),
             ],
             [['enabled', 'enabledOnly'], 'boolean'],
             [['threshold'], 'integer', 'min' => 0, 'max' => 100],
@@ -273,12 +273,12 @@ class Rule extends Model
         $type = $this->elementType;
 
         if (!is_string($type) || !class_exists($type) || !is_subclass_of($type, ElementInterface::class)) {
-            $this->addError($attribute, Craft::t('friends', 'That is not an element type.'));
+            $this->addError($attribute, Craft::t('friend', 'That is not an element type.'));
             return;
         }
 
         if (!$type::hasUris()) {
-            $this->addError($attribute, Craft::t('friends', '{type} elements do not have URLs, so nothing can be redirected to one.', [
+            $this->addError($attribute, Craft::t('friend', '{type} elements do not have URLs, so nothing can be redirected to one.', [
                 'type' => $type::displayName(),
             ]));
         }
@@ -290,7 +290,7 @@ class Rule extends Model
         $this->methods = array_values(array_intersect($known, (array)$this->methods));
 
         if (!$this->methods) {
-            $this->addError($attribute, Craft::t('friends', 'Pick at least one way to find candidates.'));
+            $this->addError($attribute, Craft::t('friend', 'Pick at least one way to find candidates.'));
         }
     }
 
@@ -303,14 +303,14 @@ class Rule extends Model
         }
 
         if (@preg_match('~' . str_replace('~', '\~', substr($pattern, 3)) . '~i', '') === false) {
-            $this->addError($attribute, Craft::t('friends', 'That regular expression is not valid.'));
+            $this->addError($attribute, Craft::t('friend', 'That regular expression is not valid.'));
         }
     }
 
     public function validateFallbackUrl(string $attribute): void
     {
         if ($this->fallback === self::FALLBACK_URL && trim((string)$this->fallbackUrl) === '') {
-            $this->addError($attribute, Craft::t('friends', 'A fallback needs somewhere to go.'));
+            $this->addError($attribute, Craft::t('friend', 'A fallback needs somewhere to go.'));
         }
     }
 

@@ -1,26 +1,26 @@
 {% extends "_layouts/cp" %}
 
-{% set title = "Pins"|t('friends') %}
+{% set title = "Pins"|t('friend') %}
 {% set selectedSubnavItem = 'pins' %}
-{% do view.registerAssetBundle('justinholtweb\\friends\\web\\assets\\cp\\CpAsset') %}
+{% do view.registerAssetBundle('justinholtweb\\friend\\web\\assets\\cp\\CpAsset') %}
 
 {% block actionButton %}
-    <a href="{{ url('friends/pins/new') }}" class="btn submit add icon">{{ "New pin"|t('friends') }}</a>
+    <a href="{{ url('friend/pins/new') }}" class="btn submit add icon">{{ "New pin"|t('friend') }}</a>
 {% endblock %}
 
 {% block content %}
     <p class="light">
-        {{ "A pin is a stored answer for one exact URI, checked before any rule. It is how you fix the one URL the scoring gets wrong without making the rules worse for every other URL."|t('friends') }}
+        {{ "A pin is a stored answer for one exact URI, checked before any rule. It is how you fix the one URL the scoring gets wrong without making the rules worse for every other URL."|t('friend') }}
     </p>
 
     {% if pins|length %}
         <table class="data fullwidth">
             <thead>
                 <tr>
-                    <th>{{ "URI"|t('friends') }}</th>
-                    <th>{{ "Goes to"|t('friends') }}</th>
+                    <th>{{ "URI"|t('friend') }}</th>
+                    <th>{{ "Goes to"|t('friend') }}</th>
                     <th class="thin">{{ "Site"|t('app') }}</th>
-                    <th class="thin">{{ "Hits"|t('friends') }}</th>
+                    <th class="thin">{{ "Hits"|t('friend') }}</th>
                     <th class="thin">{{ "Enabled"|t('app') }}</th>
                     <th class="thin"></th>
                 </tr>
@@ -38,15 +38,15 @@
                                 <code>{{ pin.url ?? '—' }}</code>
                             {% endif %}
                         </td>
-                        <td class="thin"><span class="light">{{ pin.siteId ? craft.app.sites.getSiteById(pin.siteId).name : "All"|t('friends') }}</span></td>
+                        <td class="thin"><span class="light">{{ pin.siteId ? craft.app.sites.getSiteById(pin.siteId).name : "All"|t('friend') }}</span></td>
                         <td class="thin">{{ pin.hits }}</td>
                         <td class="thin">{% if pin.enabled %}<span data-icon="check"></span>{% else %}<span class="light">—</span>{% endif %}</td>
                         <td class="thin">
-                            <form method="post" class="friends-inline-form">
+                            <form method="post" class="friend-inline-form">
                                 {{ csrfInput() }}
-                                <input type="hidden" name="action" value="friends/pins/delete">
+                                <input type="hidden" name="action" value="friend/pins/delete">
                                 <input type="hidden" name="id" value="{{ pin.id }}">
-                                {{ redirectInput('friends/pins') }}
+                                {{ redirectInput('friend/pins') }}
                                 <button type="submit" class="btn small">{{ "Delete"|t('app') }}</button>
                             </form>
                         </td>
@@ -56,7 +56,7 @@
         </table>
     {% else %}
         <div class="zilch">
-            <p>{{ "No pins. Add one here, or press Pin on a row in the 404 log once Friends has proved it picks the right target."|t('friends') }}</p>
+            <p>{{ "No pins. Add one here, or press Pin on a row in the 404 log once Friend has proved it picks the right target."|t('friend') }}</p>
         </div>
     {% endif %}
 {% endblock %}

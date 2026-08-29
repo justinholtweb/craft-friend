@@ -1,9 +1,9 @@
-# Friends — Craft CMS 5 Plugin
+# Friend — Craft CMS 5 Plugin
 
 ## Project Overview
 
-Friends redirects 404s to the entry the visitor was probably after, under admin-written rules.
-Distributed as `justinholtweb/craft-friends`. **Free — no editions, no licensing code.**
+Friend redirects 404s to the entry the visitor was probably after, under admin-written rules.
+Distributed as `justinholtweb/craft-friend`. **Free — no editions, no licensing code.**
 
 Reference point: the WordPress *404 Auto Redirect to Similar Post* plugin. Same ground, done the
 Craft way — because "similar post" in WordPress is one search over one table, and in Craft the
@@ -17,7 +17,7 @@ admin has to say *which* elements are eligible, *when*, and *how sure* the match
 
 ## Architecture
 
-- Namespace `justinholtweb\friends` · package `justinholtweb/craft-friends` · handle `friends`
+- Namespace `justinholtweb\friend` · package `justinholtweb/craft-friend` · handle `friend`
 
 ### The one hook everything hangs off
 
@@ -64,7 +64,7 @@ the cache stores a decision and not a candidate list.
 ## Traps found while building this
 
 - **`action` is Craft's controller parameter.** The rule edit form has an action select
-  (redirect / suggest / ignore), and naming that field `action` overwrites `friends/rules/save`
+  (redirect / suggest / ignore), and naming that field `action` overwrites `friend/rules/save`
   with `redirect` — the request 404s on a route nobody wrote, *before the controller runs*. Posted
   as `ruleAction`. Same family as the reserved `token` and `p` params in
   `[[craft-plugin-gotchas]]`.
@@ -106,13 +106,13 @@ See also `[[craft-plugin-gotchas]]` in the shared memory for family-wide traps.
 No local PHP on this Mac. Everything runs inside the plugin-testing container:
 
 ```sh
-docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friends/tests/integration/checks.php   # 125 checks
-docker exec ddev-plugin-testing-web bash -c 'find /var/www/craft-friends/src -name "*.php" -print0 | xargs -0 -n1 php -l'
+docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friend/tests/integration/checks.php   # 125 checks
+docker exec ddev-plugin-testing-web bash -c 'find /var/www/craft-friend/src -name "*.php" -print0 | xargs -0 -n1 php -l'
 ```
 
 The checks are idempotent and self-cleaning — every fixture is deleted whether the run passes or
 not, and strays from a run that died are swept first. They build entries in the harness's
-`liveTest` section with a `friends-check-` slug prefix, and stand every other rule down so an
+`liveTest` section with a `friend-check-` slug prefix, and stand every other rule down so an
 outcome is about the rule under test.
 
 End-to-end (the error handler hook itself cannot be reached from the console):
@@ -121,12 +121,12 @@ End-to-end (the error handler hook itself cannot be reached from the console):
 curl -sk -o /dev/null -D - https://plugin-testing.ddev.site/smoke-test/test-entry-2 | head -4
 ```
 
-`ddev craft clear-caches/cp-resources` after editing `src/web/assets/cp/dist/friends-cp.css`, or
+`ddev craft clear-caches/cp-resources` after editing `src/web/assets/cp/dist/friend-cp.css`, or
 Craft keeps serving the published copy.
 
 ## Coding conventions
 
-- `Craft::t('friends', '…')` for user-facing strings; `src/translations/en/friends.php` is generated
+- `Craft::t('friend', '…')` for user-facing strings; `src/translations/en/friend.php` is generated
   from the source
 - Business logic in services; controllers stay thin
 - Never nest a `<form>` in a CP `fullPageForm` template

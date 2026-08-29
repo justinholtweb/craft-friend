@@ -1,13 +1,13 @@
-/* Friends — control panel */
+/* Friend — control panel */
 
-.friends-summary {
+.friend-summary {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.friends-stat {
+.friend-stat {
     flex: 1 1 120px;
     padding: 14px 16px;
     border: 1px solid var(--hairline-color, #e3e5e8);
@@ -15,25 +15,25 @@
     background: var(--gray-050, #fbfcfe);
 }
 
-.friends-stat--good {
+.friend-stat--good {
     border-color: rgba(46, 158, 116, 0.4);
 }
 
-.friends-stat-number {
+.friend-stat-number {
     display: block;
     font-size: 26px;
     font-weight: 600;
     line-height: 1.1;
 }
 
-.friends-stat-label {
+.friend-stat-label {
     display: block;
     margin-top: 2px;
     font-size: 12px;
     color: var(--light-text-color, #606d7b);
 }
 
-.friends-filters {
+.friend-filters {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -41,7 +41,7 @@
     margin-bottom: 18px;
 }
 
-.friends-pill {
+.friend-pill {
     display: inline-block;
     padding: 1px 7px;
     border-radius: 9px;
@@ -51,60 +51,60 @@
     color: var(--light-text-color, #606d7b);
 }
 
-.friends-pill--good {
+.friend-pill--good {
     background: rgba(46, 158, 116, 0.15);
     color: #1f7a58;
 }
 
-.friends-inline-form {
+.friend-inline-form {
     display: inline-block;
     margin: 0 4px 0 0;
 }
 
-.friends-log code,
-.friends-candidates code {
+.friend-log code,
+.friend-candidates code {
     word-break: break-all;
 }
 
-.friends-pagination {
+.friend-pagination {
     display: flex;
     gap: 4px;
     margin-top: 14px;
 }
 
-.friends-clear {
+.friend-clear {
     margin-top: 24px;
 }
 
-.friends-panel {
+.friend-panel {
     padding: 14px 16px;
     margin: 18px 0;
     border: 1px solid var(--hairline-color, #e3e5e8);
     border-radius: var(--large-border-radius, 8px);
 }
 
-.friends-panel h2 {
+.friend-panel h2 {
     margin: 0 0 4px;
 }
 
-.friends-panel--good {
+.friend-panel--good {
     border-color: rgba(46, 158, 116, 0.5);
     background: rgba(46, 158, 116, 0.06);
 }
 
-.friends-panel--warning {
+.friend-panel--warning {
     border-color: rgba(224, 160, 46, 0.5);
     background: rgba(224, 160, 46, 0.08);
 }
 
-.friends-score {
+.friend-score {
     display: inline-block;
     min-width: 34px;
     font-variant-numeric: tabular-nums;
     font-weight: 600;
 }
 
-.friends-bar {
+.friend-bar {
     display: block;
     width: 70px;
     height: 4px;
@@ -114,18 +114,18 @@
     overflow: hidden;
 }
 
-.friends-bar > span {
+.friend-bar > span {
     display: block;
     height: 100%;
     background: #2e9e74;
 }
 
-.friends-winner > td {
+.friend-winner > td {
     background: rgba(46, 158, 116, 0.07);
 }
 
 @media (prefers-color-scheme: dark) {
-    .friends-stat {
+    .friend-stat {
         background: rgba(255, 255, 255, 0.03);
     }
 }

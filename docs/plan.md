@@ -1,13 +1,13 @@
-# Friends — plan
+# Friend — plan
 
-**Every dead URL has a friend.** When a page 404s, Friends looks for the entry the visitor was
+**Every dead URL has a friend.** When a page 404s, Friend looks for the entry the visitor was
 probably after and sends them there, under rules an admin writes.
 
-Package `justinholtweb/craft-friends`, namespace `justinholtweb\friends`, handle `friends`.
+Package `justinholtweb/craft-friend`, namespace `justinholtweb\friend`, handle `friend`.
 **Free — no editions, no licensing code.** Craft 5.3+, PHP 8.2+, no build step, no runtime
 dependencies beyond Craft's own.
 
-Reference point: the WordPress *404 Auto Redirect to Similar Post* plugin. Friends covers the same
+Reference point: the WordPress *404 Auto Redirect to Similar Post* plugin. Friend covers the same
 ground and then some — because in WordPress "similar post" is one search across one post table,
 and in Craft the admin needs to say *which* elements are eligible, *when*, and *how sure* the
 match has to be before a visitor is moved.
@@ -37,14 +37,14 @@ Redirecting from inside it is Craft's own pattern in the same method —
 `getResponse()->redirect($url, $code)` then `Craft::$app->end()`, which sends and exits.
 
 Because our handler runs *first*, `config/redirects.php` would otherwise never get a look in. So
-Friends re-checks those rules itself and stands down when one of them matches (`honourConfigRedirects`,
+Friend re-checks those rules itself and stands down when one of them matches (`honourConfigRedirects`,
 on by default). Explicit beats inferred, always.
 
 ### 302 by default, not 301
 
 The WordPress plugin defaults to 301. A 301 is cached by the browser and by every intermediary,
 often for as long as the browser feels like — so a *guessed* 301 that guesses wrong is a URL the
-visitor cannot reach again even after the admin fixes the rule. Friends defaults to **302** and
+visitor cannot reach again even after the admin fixes the rule. Friend defaults to **302** and
 lets a rule opt into 301 once the admin trusts it. This is written down in the settings screen,
 not just here.
 
@@ -111,9 +111,9 @@ out: never redirect to the URI that just missed, and never to a target with no U
 
 ## Data
 
-- `friends_rules` — ordered rule set; scalars in columns, the four config blocks as JSON
-- `friends_pins` — unique on `(siteId, uri)`
-- `friends_log` — unique on `(siteId, uri)`, hit-counted
+- `friend_rules` — ordered rule set; scalars in columns, the four config blocks as JSON
+- `friend_pins` — unique on `(siteId, uri)`
+- `friend_log` — unique on `(siteId, uri)`, hit-counted
 
 ## Caching
 

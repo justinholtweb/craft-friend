@@ -1,10 +1,10 @@
 <?php
 /**
- * Friends integration checks.
+ * Friend integration checks.
  *
  * Run inside the plugin-testing container, from the site root:
  *
- *     docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friends/tests/integration/checks.php
+ *     docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friend/tests/integration/checks.php
  *
  * Idempotent and self-cleaning: every fixture it creates it deletes again, whether the run passes
  * or not, and it sweeps up strays from a run that died half way.
@@ -18,16 +18,16 @@ $app = require CRAFT_VENDOR_PATH . '/craftcms/cms/bootstrap/console.php';
 
 use craft\elements\Entry;
 use craft\helpers\Db;
-use justinholtweb\friends\db\Table;
-use justinholtweb\friends\helpers\Similarity;
-use justinholtweb\friends\helpers\Uris;
-use justinholtweb\friends\models\Miss;
-use justinholtweb\friends\models\Outcome;
-use justinholtweb\friends\models\Pin;
-use justinholtweb\friends\models\Rule;
-use justinholtweb\friends\models\Trace;
-use justinholtweb\friends\Plugin;
-use justinholtweb\friends\twig\FriendsVariable;
+use justinholtweb\friend\db\Table;
+use justinholtweb\friend\helpers\Similarity;
+use justinholtweb\friend\helpers\Uris;
+use justinholtweb\friend\models\Miss;
+use justinholtweb\friend\models\Outcome;
+use justinholtweb\friend\models\Pin;
+use justinholtweb\friend\models\Rule;
+use justinholtweb\friend\models\Trace;
+use justinholtweb\friend\Plugin;
+use justinholtweb\friend\twig\FriendVariable;
 
 $passed = 0;
 $failed = 0;
@@ -60,12 +60,12 @@ function heading(string $text): void
 
 // ---------------------------------------------------------------------- fixtures
 
-const PREFIX = 'friends-check-';
+const PREFIX = 'friend-check-';
 
 $plugin = Plugin::getInstance();
 
 if ($plugin === null) {
-    echo "Friends is not installed in this site.\n";
+    echo "Friend is not installed in this site.\n";
     exit(1);
 }
 
@@ -96,7 +96,7 @@ $sweep = static function() use ($section): void {
         Craft::$app->getElements()->deleteElement($entry, true);
     }
 
-    Craft::$app->getDb()->createCommand()->delete(Table::RULES, ['like', 'handle', 'friendsCheck%', false])->execute();
+    Craft::$app->getDb()->createCommand()->delete(Table::RULES, ['like', 'handle', 'friendCheck%', false])->execute();
     Craft::$app->getDb()->createCommand()->delete(Table::PINS, ['like', 'uri', PREFIX . '%', false])->execute();
     Craft::$app->getDb()->createCommand()->delete(Table::LOG, ['like', 'uri', PREFIX . '%', false])->execute();
     Craft::$app->getDb()->createCommand()->delete(Table::LOG, ['like', 'uri', 'live-test/' . PREFIX . '%', false])->execute();
@@ -127,7 +127,7 @@ $fixtures = [];
 
 try {
     $fixtures['office'] = $makeEntry(PREFIX . 'our-new-office', 'Our New Office');
-    $fixtures['hub'] = $makeEntry(PREFIX . 'hub', 'Friends Check Hub');
+    $fixtures['hub'] = $makeEntry(PREFIX . 'hub', 'Friend Check Hub');
     $fixtures['audits'] = $makeEntry(PREFIX . 'seo-audits', 'SEO Audits');
     $fixtures['disabled'] = $makeEntry(PREFIX . 'archived-page', 'Archived Page');
 
@@ -140,8 +140,8 @@ try {
     // to be in the harness.
     $baseRule = static function(array $config = []) use ($section): Rule {
         return new Rule(array_merge([
-            'name' => 'Friends check rule',
-            'handle' => 'friendsCheckRule',
+            'name' => 'Friend check rule',
+            'handle' => 'friendCheckRule',
             'elementType' => Entry::class,
             'sectionIds' => [$section->id],
             'methods' => [Rule::METHOD_SLUG, Rule::METHOD_TOKENS, Rule::METHOD_SEARCH],
@@ -297,28 +297,28 @@ try {
     heading('Settings');
 
     check('editable-table rows are flattened to strings', function() {
-        $model = new justinholtweb\friends\models\Settings();
+        $model = new justinholtweb\friend\models\Settings();
         $model->ignoredPatterns = [['pattern' => 'wp-*'], ['pattern' => '']];
         $model->validate();
 
         return $model->ignoredPatterns === ['wp-*'];
     });
     check('extensions are lowercased and stripped of their dot', function() {
-        $model = new justinholtweb\friends\models\Settings();
+        $model = new justinholtweb\friend\models\Settings();
         $model->ignoredExtensions = [['extension' => '.JPG']];
         $model->validate();
 
         return $model->ignoredExtensions === ['jpg'];
     });
     check('no setting is required, so a blank model still validates', function() {
-        $model = new justinholtweb\friends\models\Settings();
+        $model = new justinholtweb\friend\models\Settings();
         $model->ignoredPatterns = [];
         $model->ignoredExtensions = [];
 
         return $model->validate();
     });
     check('an out-of-range status code is rejected', function() {
-        $model = new justinholtweb\friends\models\Settings();
+        $model = new justinholtweb\friend\models\Settings();
         $model->redirectStatusCode = 418;
 
         return !$model->validate();
@@ -337,10 +337,10 @@ try {
             return implode(' ', $rule->getFirstErrors());
         }
 
-        return $rules->getRuleByHandle('friendsCheckRule')?->id === $rule->id;
+        return $rules->getRuleByHandle('friendCheckRule')?->id === $rule->id;
     });
 
-    $savedRule = $rules->getRuleByHandle('friendsCheckRule');
+    $savedRule = $rules->getRuleByHandle('friendCheckRule');
 
     check('a duplicate handle is rejected', function() use ($rules, $baseRule) {
         $duplicate = $baseRule();
@@ -348,7 +348,7 @@ try {
         return !$rules->saveRule($duplicate) && $duplicate->hasErrors('handle');
     });
     check('a new rule lands at the bottom of the order', function() use ($rules, $baseRule, $savedRule) {
-        $second = $baseRule(['name' => 'Friends check rule two', 'handle' => 'friendsCheckRuleTwo']);
+        $second = $baseRule(['name' => 'Friend check rule two', 'handle' => 'friendCheckRuleTwo']);
         $rules->saveRule($second);
 
         return $second->sortOrder > $savedRule->sortOrder;
@@ -381,10 +381,10 @@ try {
         return $absent;
     });
     check('deleting the second rule removes it', function() use ($rules) {
-        $second = $rules->getRuleByHandle('friendsCheckRuleTwo');
+        $second = $rules->getRuleByHandle('friendCheckRuleTwo');
         $rules->deleteRuleById($second->id);
 
-        return $rules->getRuleByHandle('friendsCheckRuleTwo') === null;
+        return $rules->getRuleByHandle('friendCheckRuleTwo') === null;
     });
 
     // ------------------------------------------------------------------ Candidates
@@ -495,7 +495,7 @@ try {
     $settings->cacheDuration = 0;
 
     $withRule = static function(array $config, callable $body) use ($rules, $baseRule) {
-        $rule = $rules->getRuleByHandle('friendsCheckRule');
+        $rule = $rules->getRuleByHandle('friendCheckRule');
 
         foreach ($config as $attribute => $value) {
             $rule->$attribute = $value;
@@ -513,7 +513,7 @@ try {
     $otherRuleIds = [];
 
     foreach ($rules->getAllRules() as $rule) {
-        if ($rule->handle !== 'friendsCheckRule' && $rule->enabled) {
+        if ($rule->handle !== 'friendCheckRule' && $rule->enabled) {
             $otherRuleIds[] = $rule->id;
             $rules->toggleRule($rule->id, false);
         }
@@ -620,8 +620,8 @@ try {
 
     $pins = $plugin->getPins();
 
-    check('the same site and URI always hash the same', fn() => justinholtweb\friends\services\Pins::hash(1, '/a/b') === justinholtweb\friends\services\Pins::hash(1, 'a/b'));
-    check('different sites hash differently', fn() => justinholtweb\friends\services\Pins::hash(1, 'a') !== justinholtweb\friends\services\Pins::hash(2, 'a'));
+    check('the same site and URI always hash the same', fn() => justinholtweb\friend\services\Pins::hash(1, '/a/b') === justinholtweb\friend\services\Pins::hash(1, 'a/b'));
+    check('different sites hash differently', fn() => justinholtweb\friend\services\Pins::hash(1, 'a') !== justinholtweb\friend\services\Pins::hash(2, 'a'));
     check('a pin saves and is found by URI', function() use ($pins, $fixtures, $siteId) {
         $pin = new Pin([
             'siteId' => null,
@@ -854,28 +854,28 @@ try {
 
     check('suggestions come back for a given URI', function() use ($withRule, $siteId) {
         return $withRule(['action' => Rule::ACTION_REDIRECT, 'threshold' => 55], function() {
-            $variable = new FriendsVariable();
+            $variable = new FriendVariable();
 
             return count($variable->suggestions(3, 'news/' . PREFIX . 'our-new-office')) > 0;
         });
     });
     check('suggestions respect the limit', function() {
-        $variable = new FriendsVariable();
+        $variable = new FriendVariable();
 
         return count($variable->suggestions(1, 'live-test/' . PREFIX . 'our')) <= 1;
     });
     check('best returns the winning candidate', function() {
-        $variable = new FriendsVariable();
+        $variable = new FriendVariable();
 
         return str_ends_with((string)$variable->best('news/' . PREFIX . 'our-new-office')?->uri, PREFIX . 'our-new-office');
     });
     check('outcome is returned for an arbitrary URI', function() {
-        $variable = new FriendsVariable();
+        $variable = new FriendVariable();
 
         return $variable->outcome('news/' . PREFIX . 'our-new-office') instanceof Outcome;
     });
     check('missedUri is empty outside a web request', function() {
-        return (new FriendsVariable())->missedUri() === '';
+        return (new FriendVariable())->missedUri() === '';
     });
 
     foreach ($otherRuleIds as $id) {

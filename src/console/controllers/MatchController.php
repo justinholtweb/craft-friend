@@ -1,18 +1,18 @@
 <?php
 
-namespace justinholtweb\friends\console\controllers;
+namespace justinholtweb\friend\console\controllers;
 
 use Craft;
 use craft\console\Controller;
 use craft\helpers\Console;
-use justinholtweb\friends\models\Miss;
-use justinholtweb\friends\models\Rule;
-use justinholtweb\friends\models\Trace;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\models\Miss;
+use justinholtweb\friend\models\Rule;
+use justinholtweb\friend\models\Trace;
+use justinholtweb\friend\Plugin;
 use yii\console\ExitCode;
 
 /**
- * `php craft friends/match/test <uri>` — the tester, without a browser.
+ * `php craft friend/match/test <uri>` — the tester, without a browser.
  */
 class MatchController extends Controller
 {
@@ -56,7 +56,7 @@ class MatchController extends Controller
         }
 
         if ($plugin->getSettings()->honourConfigRedirects && $matcher->hasConfigRedirects()) {
-            $this->stdout("  Note: config/redirects.php exists and wins over Friends. Its rules match against\n"
+            $this->stdout("  Note: config/redirects.php exists and wins over Friend. Its rules match against\n"
                 . "  the live request, so they cannot be evaluated for a hypothetical URI here.\n\n", Console::FG_YELLOW);
         }
 

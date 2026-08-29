@@ -1,53 +1,53 @@
 {% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
 
-{% set title = "Tester"|t('friends') %}
+{% set title = "Tester"|t('friend') %}
 {% set selectedSubnavItem = 'tester' %}
-{% do view.registerAssetBundle('justinholtweb\\friends\\web\\assets\\cp\\CpAsset') %}
+{% do view.registerAssetBundle('justinholtweb\\friend\\web\\assets\\cp\\CpAsset') %}
 
 {% block content %}
     <p class="light">
-        {{ "Resolve a URL as though it had just 404'd, and see every step. Nothing here is cached and nothing is logged — this is what the rules say right now."|t('friends') }}
+        {{ "Resolve a URL as though it had just 404'd, and see every step. Nothing here is cached and nothing is logged — this is what the rules say right now."|t('friend') }}
     </p>
 
-    <form method="get" class="friends-filters">
+    <form method="get" class="friend-filters">
         {{ forms.text({ name: 'uri', value: uri, placeholder: 'blog/a-page-that-moved', size: 40, class: 'code' }) }}
         {% if siteOptions|length > 1 %}
             {{ forms.select({ name: 'siteId', value: siteId, options: siteOptions }) }}
         {% endif %}
-        <button type="submit" class="btn submit">{{ "Try it"|t('friends') }}</button>
+        <button type="submit" class="btn submit">{{ "Try it"|t('friend') }}</button>
     </form>
 
     {% if uri %}
-        <div class="friends-panel">
+        <div class="friend-panel">
             <h2><code>/{{ miss.uri }}</code></h2>
             <p class="light smalltext">
-                {{ "slug"|t('friends') }} <code>{{ miss.slug ?: '—' }}</code> ·
-                {{ "words"|t('friends') }} <code>{{ miss.tokens|join(', ') ?: '—' }}</code>
+                {{ "slug"|t('friend') }} <code>{{ miss.slug ?: '—' }}</code> ·
+                {{ "words"|t('friend') }} <code>{{ miss.tokens|join(', ') ?: '—' }}</code>
             </p>
         </div>
 
         {% if configRedirectsPresent %}
-            <div class="friends-panel friends-panel--warning">
-                <p>{{ "This site has a `config/redirects.php`, and it wins over Friends. Its rules match against the live request, so they cannot be evaluated for a hypothetical URI here."|t('friends')|md(inlineOnly=true) }}</p>
+            <div class="friend-panel friend-panel--warning">
+                <p>{{ "This site has a `config/redirects.php`, and it wins over Friend. Its rules match against the live request, so they cannot be evaluated for a hypothetical URI here."|t('friend')|md(inlineOnly=true) }}</p>
             </div>
         {% endif %}
 
         {% if not eligible %}
-            <div class="friends-panel friends-panel--warning">
+            <div class="friend-panel friend-panel--warning">
                 <p>{{ ineligibleReason }}</p>
             </div>
         {% else %}
-            <h2>{{ "What each rule said"|t('friends') }}</h2>
+            <h2>{{ "What each rule said"|t('friend') }}</h2>
 
             {% if outcome.traces|length %}
                 <table class="data fullwidth">
                     <thead>
                         <tr>
-                            <th>{{ "Rule"|t('friends') }}</th>
-                            <th class="thin">{{ "Verdict"|t('friends') }}</th>
-                            <th class="thin">{{ "Best"|t('friends') }}</th>
-                            <th>{{ "Why"|t('friends') }}</th>
+                            <th>{{ "Rule"|t('friend') }}</th>
+                            <th class="thin">{{ "Verdict"|t('friend') }}</th>
+                            <th class="thin">{{ "Best"|t('friend') }}</th>
+                            <th>{{ "Why"|t('friend') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +55,7 @@
                             <tr>
                                 <td>{{ trace.ruleName }}</td>
                                 <td class="thin">
-                                    <span class="friends-pill {{ trace.isDecisive() ? 'friends-pill--good' : '' }}">{{ trace.status }}</span>
+                                    <span class="friend-pill {{ trace.isDecisive() ? 'friend-pill--good' : '' }}">{{ trace.status }}</span>
                                 </td>
                                 <td class="thin">{{ trace.bestScore is not null ? trace.bestScore|number_format(1) : '—' }}</td>
                                 <td><span class="light">{{ trace.reason }}</span></td>
@@ -64,29 +64,29 @@
                     </tbody>
                 </table>
             {% else %}
-                <p class="light">{{ "No rules are enabled for this site."|t('friends') }}</p>
+                <p class="light">{{ "No rules are enabled for this site."|t('friend') }}</p>
             {% endif %}
 
-            <h2>{{ "Candidates"|t('friends') }}</h2>
+            <h2>{{ "Candidates"|t('friend') }}</h2>
 
             {% if outcome.candidates|length %}
-                <table class="data fullwidth friends-candidates">
+                <table class="data fullwidth friend-candidates">
                     <thead>
                         <tr>
-                            <th class="thin">{{ "Score"|t('friends') }}</th>
-                            <th>{{ "Element"|t('friends') }}</th>
-                            <th class="thin">{{ "slug"|t('friends') }}</th>
-                            <th class="thin">{{ "title"|t('friends') }}</th>
-                            <th class="thin">{{ "path"|t('friends') }}</th>
-                            <th class="thin">{{ "Found by"|t('friends') }}</th>
+                            <th class="thin">{{ "Score"|t('friend') }}</th>
+                            <th>{{ "Element"|t('friend') }}</th>
+                            <th class="thin">{{ "slug"|t('friend') }}</th>
+                            <th class="thin">{{ "title"|t('friend') }}</th>
+                            <th class="thin">{{ "path"|t('friend') }}</th>
+                            <th class="thin">{{ "Found by"|t('friend') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for candidate in outcome.candidates %}
-                            <tr class="{{ outcome.candidate and outcome.candidate.elementId == candidate.elementId ? 'friends-winner' : '' }}">
+                            <tr class="{{ outcome.candidate and outcome.candidate.elementId == candidate.elementId ? 'friend-winner' : '' }}">
                                 <td class="thin">
-                                    <span class="friends-score">{{ candidate.score|number_format(1) }}</span>
-                                    <span class="friends-bar"><span style="width: {{ min(candidate.score, 100) }}%"></span></span>
+                                    <span class="friend-score">{{ candidate.score|number_format(1) }}</span>
+                                    <span class="friend-bar"><span style="width: {{ min(candidate.score, 100) }}%"></span></span>
                                 </td>
                                 <td>
                                     {{ candidate.title }}
@@ -101,18 +101,18 @@
                     </tbody>
                 </table>
             {% else %}
-                <p class="light">{{ "Nothing came back from any retrieval method."|t('friends') }}</p>
+                <p class="light">{{ "Nothing came back from any retrieval method."|t('friend') }}</p>
             {% endif %}
 
-            <div class="friends-panel {{ outcome.shouldRedirect() ? 'friends-panel--good' : '' }}">
+            <div class="friend-panel {{ outcome.shouldRedirect() ? 'friend-panel--good' : '' }}">
                 {% if outcome.shouldRedirect() %}
                     <p><strong>{{ outcome.statusCode }}</strong> → <code>{{ outcome.targetUrl }}</code></p>
                 {% elseif outcome.action == 'suggest' %}
-                    <p>{{ "Stays 404, and hands {count} suggestion(s) to your template."|t('friends', { count: outcome.candidates|length }) }}</p>
+                    <p>{{ "Stays 404, and hands {count} suggestion(s) to your template."|t('friend', { count: outcome.candidates|length }) }}</p>
                 {% elseif outcome.action == 'ignore' %}
-                    <p>{{ "Stays 404 — a rule matched and is set to do nothing."|t('friends') }}</p>
+                    <p>{{ "Stays 404 — a rule matched and is set to do nothing."|t('friend') }}</p>
                 {% else %}
-                    <p>{{ "Stays 404 — no rule decided."|t('friends') }}</p>
+                    <p>{{ "Stays 404 — no rule decided."|t('friend') }}</p>
                 {% endif %}
             </div>
         {% endif %}

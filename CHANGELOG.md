@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Friends are documented here.
+All notable changes to Friend are documented here.
 
 ## 5.0.0 — 2026-08-18
 
@@ -26,14 +26,14 @@ family is.
 - **Tester** — a control panel screen and a console command that resolve a URL and print the whole
   decision: every rule considered, why each was skipped or declined, and the ranked candidates with
   their score breakdown.
-- **`craft.friends`** — `suggestions()`, `best()`, `outcome()` and `missedUri()` for a 404 template
+- **`craft.friend`** — `suggestions()`, `best()`, `outcome()` and `missedUri()` for a 404 template
   that would rather offer a "did you mean" list than move anybody.
 - **Guards** — site GET requests only, never the homepage, never an ignored pattern or file
   extension, and never a redirect back to the URI that just missed.
-- **Deference to `config/redirects.php`** — Friends runs before Craft consults that file, so it
+- **Deference to `config/redirects.php`** — Friend runs before Craft consults that file, so it
   checks the file itself and stands down when a rule there already covers the URI.
-- **Console commands** — `friends/match/test`, `friends/match/rules`, `friends/log`,
-  `friends/log/prune`, `friends/log/clear`.
+- **Console commands** — `friend/match/test`, `friend/match/rules`, `friend/log`,
+  `friend/log/prune`, `friend/log/clear`.
 - Two rules seeded on install: a conservative "Similar entries" that works, and a "Nearest
   surviving page" switched off to read.
 - 125 integration checks.

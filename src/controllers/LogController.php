@@ -1,11 +1,11 @@
 <?php
 
-namespace justinholtweb\friends\controllers;
+namespace justinholtweb\friend\controllers;
 
 use Craft;
 use craft\web\Controller;
-use justinholtweb\friends\models\Pin;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\models\Pin;
+use justinholtweb\friend\Plugin;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -44,7 +44,7 @@ class LogController extends Controller
 
         $total = $log->getTotal($options);
 
-        return $this->renderTemplate('friends/log/_index', [
+        return $this->renderTemplate('friend/log/_index', [
             'entries' => $log->getEntries($options),
             'summary' => $log->getSummary(),
             'total' => $total,
@@ -63,7 +63,7 @@ class LogController extends Controller
 
         Plugin::getInstance()->getLog()->deleteById((int)$this->request->getRequiredBodyParam('id'));
 
-        return $this->asSuccess(Craft::t('friends', 'Entry deleted.'));
+        return $this->asSuccess(Craft::t('friend', 'Entry deleted.'));
     }
 
     public function actionClear(): Response
@@ -72,7 +72,7 @@ class LogController extends Controller
 
         $deleted = Plugin::getInstance()->getLog()->clear();
 
-        $this->setSuccessFlash(Craft::t('friends', '{count} entries cleared.', ['count' => $deleted]));
+        $this->setSuccessFlash(Craft::t('friend', '{count} entries cleared.', ['count' => $deleted]));
 
         return $this->redirectToPostedUrl();
     }
@@ -95,7 +95,7 @@ class LogController extends Controller
         }
 
         if (!$entry->targetElementId && !$entry->targetUrl) {
-            $this->setFailFlash(Craft::t('friends', 'That entry has no target to pin.'));
+            $this->setFailFlash(Craft::t('friend', 'That entry has no target to pin.'));
 
             return $this->redirectToPostedUrl();
         }
@@ -115,14 +115,14 @@ class LogController extends Controller
         }
 
         if (!$pins->savePin($pin)) {
-            $this->setFailFlash(Craft::t('friends', 'Couldn’t pin that: {errors}', [
+            $this->setFailFlash(Craft::t('friend', 'Couldn’t pin that: {errors}', [
                 'errors' => implode(' ', $pin->getFirstErrors()),
             ]));
 
             return $this->redirectToPostedUrl();
         }
 
-        $this->setSuccessFlash(Craft::t('friends', 'Pinned.'));
+        $this->setSuccessFlash(Craft::t('friend', 'Pinned.'));
 
         return $this->redirectToPostedUrl();
     }

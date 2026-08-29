@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\models;
+namespace justinholtweb\friend\models;
 
 use craft\base\Model;
 
@@ -13,7 +13,7 @@ use craft\base\Model;
  */
 class Settings extends Model
 {
-    /** Master switch. Off means Friends never looks at a 404 at all. */
+    /** Master switch. Off means Friend never looks at a 404 at all. */
     public bool $enabled = true;
 
     /**
@@ -29,13 +29,13 @@ class Settings extends Model
     /**
      * Stand down when a `config/redirects.php` rule already covers the URI.
      *
-     * Friends hooks the top of Craft's exception handling, which is *before* Craft consults that
+     * Friend hooks the top of Craft's exception handling, which is *before* Craft consults that
      * file — so without this check a fuzzy guess would quietly outrank an explicit instruction.
      */
     public bool $honourConfigRedirects = true;
 
     /**
-     * URI patterns Friends never touches.
+     * URI patterns Friend never touches.
      *
      * Globs, or `re:` followed by a regular expression. The defaults are the paths that generate
      * most of a site's 404s and none of its lost visitors: probes for other CMSes, and anything

@@ -1,12 +1,12 @@
 <?php
 
-namespace justinholtweb\friends\models;
+namespace justinholtweb\friend\models;
 
 use craft\base\ElementInterface;
 use craft\base\Model;
 
 /**
- * An element Friends thinks the visitor might have wanted, and how sure it is.
+ * An element Friend thinks the visitor might have wanted, and how sure it is.
  *
  * The breakdown is carried around rather than recomputed for display, because the tester screen
  * showing a different number from the one the matcher acted on would make the tester useless.

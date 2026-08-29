@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\services;
+namespace justinholtweb\friend\services;
 
 use Craft;
 use craft\base\Component;
@@ -9,12 +9,12 @@ use craft\base\ElementInterface;
 use craft\elements\Category;
 use craft\elements\Entry;
 use craft\helpers\UrlHelper;
-use justinholtweb\friends\helpers\Similarity;
-use justinholtweb\friends\helpers\Uris;
-use justinholtweb\friends\models\Candidate;
-use justinholtweb\friends\models\Miss;
-use justinholtweb\friends\models\Rule;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\helpers\Similarity;
+use justinholtweb\friend\helpers\Uris;
+use justinholtweb\friend\models\Candidate;
+use justinholtweb\friend\models\Miss;
+use justinholtweb\friend\models\Rule;
+use justinholtweb\friend\Plugin;
 use Throwable;
 
 /**

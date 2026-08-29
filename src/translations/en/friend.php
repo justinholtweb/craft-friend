@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Friends — English strings.
+ * Friend — English strings.
  *
- * Generated from every `Craft::t('friends', …)` and `|t('friends')` in the source. Keys are the
+ * Generated from every `Craft::t('friend', …)` and `|t('friend')` in the source. Keys are the
  * English text itself, so an untranslated string falls through to something readable rather
  * than to a key.
  */
 
 return [
     '**Exact slug** is the strongest and cheapest — it is what a moved page looks like. **Word overlap** and the **search index** widen the net. **Nearest ancestor page** walks up the path instead of comparing text, and is scored on how much of the path survived.' => '**Exact slug** is the strongest and cheapest — it is what a moved page looks like. **Word overlap** and the **search index** widen the net. **Nearest ancestor page** walks up the path instead of comparing text, and is scored on how much of the path survived.',
-    '**Redirect** moves the visitor. **Suggestions** leaves them on your 404 template with a “did you mean” list from `craft.friends.suggestions()`. **Do nothing** matches the URI on purpose and stops — how you exclude a whole branch of the site from every rule below.' => '**Redirect** moves the visitor. **Suggestions** leaves them on your 404 template with a “did you mean” list from `craft.friends.suggestions()`. **Do nothing** matches the URI on purpose and stops — how you exclude a whole branch of the site from every rule below.',
+    '**Redirect** moves the visitor. **Suggestions** leaves them on your 404 template with a “did you mean” list from `craft.friend.suggestions()`. **Do nothing** matches the URI on purpose and stops — how you exclude a whole branch of the site from every rule below.' => '**Redirect** moves the visitor. **Suggestions** leaves them on your 404 template with a “did you mean” list from `craft.friend.suggestions()`. **Do nothing** matches the URI on purpose and stops — how you exclude a whole branch of the site from every rule below.',
     '0–100. The whole safety mechanism: below this the rule declines and the next one tries. Start high. The tester will tell you what real URLs score.' => '0–100. The whole safety mechanism: below this the rule declines and the next one tries. Start high. The tester will tell you what real URLs score.',
     '301 — Moved permanently' => '301 — Moved permanently',
     '302 — Found (temporary)' => '302 — Found (temporary)',
@@ -40,7 +40,7 @@ return [
     'Cache decisions for' => 'Cache decisions for',
     'Candidate limit' => 'Candidate limit',
     'Candidates' => 'Candidates',
-    'Checked before any rule. Friends already ignores control panel requests, action requests, previews and anything that is not a GET or HEAD.' => 'Checked before any rule. Friends already ignores control panel requests, action requests, previews and anything that is not a GET or HEAD.',
+    'Checked before any rule. Friend already ignores control panel requests, action requests, previews and anything that is not a GET or HEAD.' => 'Checked before any rule. Friend already ignores control panel requests, action requests, previews and anything that is not a GET or HEAD.',
     'Clear the whole log' => 'Clear the whole log',
     'Couldn’t delete the rule.' => 'Couldn’t delete the rule.',
     'Couldn’t pin that: {errors}' => 'Couldn’t pin that: {errors}',
@@ -67,14 +67,14 @@ return [
     'Filter' => 'Filter',
     'For whoever reads this list in a year.' => 'For whoever reads this list in a year.',
     'Found by' => 'Found by',
-    'Friends' => 'Friends',
-    'Friends hooks the top of Craft\'s exception handling, which is *before* Craft reads `config/redirects.php`. With this on, Friends checks that file first and stands down when a rule in it already covers the URI — explicit beats inferred.' => 'Friends hooks the top of Craft\'s exception handling, which is *before* Craft reads `config/redirects.php`. With this on, Friends checks that file first and stands down when a rule in it already covers the URI — explicit beats inferred.',
+    'Friend' => 'Friend',
+    'Friend hooks the top of Craft\'s exception handling, which is *before* Craft reads `config/redirects.php`. With this on, Friend checks that file first and stands down when a rule in it already covers the URI — explicit beats inferred.' => 'Friend hooks the top of Craft\'s exception handling, which is *before* Craft reads `config/redirects.php`. With this on, Friend checks that file first and stands down when a rule in it already covers the URI — explicit beats inferred.',
     'from' => 'from',
     'Goes to' => 'Goes to',
     'Guards' => 'Guards',
     'Hard limit on log rows; the least recently seen go first. 0 means no cap. A site being scanned hard hits this long before anything ages out.' => 'Hard limit on log rows; the least recently seen go first. 0 means no cap. A site being scanned hard hits this long before anything ages out.',
     'Hits' => 'Hits',
-    'House jargon, or a word that appears in every slug on the site and therefore tells Friends nothing. Common English words are already ignored.' => 'House jargon, or a word that appears in every slug on the site and therefore tells Friends nothing. Common English words are already ignored.',
+    'House jargon, or a word that appears in every slug on the site and therefore tells Friend nothing. Common English words are already ignored.' => 'House jargon, or a word that appears in every slug on the site and therefore tells Friend nothing. Common English words are already ignored.',
     'How much each dimension counts. Relative, not out of 100 — 3/1/1 means what it looks like.' => 'How much each dimension counts. Relative, not out of 100 — 3/1/1 means what it looks like.',
     'How sure it must be' => 'How sure it must be',
     'How to find candidates' => 'How to find candidates',
@@ -89,7 +89,7 @@ return [
     'Let the next rule try' => 'Let the next rule try',
     'Limited to other sites.' => 'Limited to other sites.',
     'Live elements only' => 'Live elements only',
-    'Look for friends' => 'Look for friends',
+    'Look for friend' => 'Look for friend',
     'Make this answer permanent' => 'Make this answer permanent',
     'Matched, but the rule offers suggestions rather than redirecting.' => 'Matched, but the rule offers suggestions rather than redirecting.',
     'Matching' => 'Matching',
@@ -99,7 +99,7 @@ return [
     'Never touch' => 'Never touch',
     'New pin' => 'New pin',
     'New rule' => 'New rule',
-    'No pins. Add one here, or press Pin on a row in the 404 log once Friends has proved it picks the right target.' => 'No pins. Add one here, or press Pin on a row in the 404 log once Friends has proved it picks the right target.',
+    'No pins. Add one here, or press Pin on a row in the 404 log once Friend has proved it picks the right target.' => 'No pins. Add one here, or press Pin on a row in the 404 log once Friend has proved it picks the right target.',
     'no rule decided' => 'no rule decided',
     'No rules are enabled for this site.' => 'No rules are enabled for this site.',
     'No rules yet.' => 'No rules yet.',
@@ -161,20 +161,20 @@ return [
     'That is not an element type.' => 'That is not an element type.',
     'That regular expression is not valid.' => 'That regular expression is not valid.',
     'The 404 log' => 'The 404 log',
-    'The master switch. Off means Friends never looks at a 404 at all — no matching, no logging, no redirect.' => 'The master switch. Off means Friends never looks at a 404 at all — no matching, no logging, no redirect.',
+    'The master switch. Off means Friend never looks at a 404 at all — no matching, no logging, no redirect.' => 'The master switch. Off means Friend never looks at a 404 at all — no matching, no logging, no redirect.',
     'The path has {count} segments; the rule wants at least {min}.' => 'The path has {count} segments; the rule wants at least {min}.',
     'The path has {count} segments; the rule wants at most {max}.' => 'The path has {count} segments; the rule wants at most {max}.',
     'The path that 404s, without the domain. A leading slash is fine — it is stripped either way.' => 'The path that 404s, without the domain. A leading slash is fine — it is stripped either way.',
     'The rule matched and is set to do nothing, so no later rule was consulted.' => 'The rule matched and is set to do nothing, so no later rule was consulted.',
     'The URI does not match `{pattern}`.' => 'The URI does not match `{pattern}`.',
     'The URI matches one of the rule’s exclusions.' => 'The URI matches one of the rule’s exclusions.',
-    'This site has a `config/redirects.php`, and it wins over Friends. Its rules match against the live request, so they cannot be evaluated for a hypothetical URI here.' => 'This site has a `config/redirects.php`, and it wins over Friends. Its rules match against the live request, so they cannot be evaluated for a hypothetical URI here.',
+    'This site has a `config/redirects.php`, and it wins over Friend. Its rules match against the live request, so they cannot be evaluated for a hypothetical URI here.' => 'This site has a `config/redirects.php`, and it wins over Friend. Its rules match against the live request, so they cannot be evaluated for a hypothetical URI here.',
     'Threshold' => 'Threshold',
     'title' => 'title',
     'Try it' => 'Try it',
     'URI' => 'URI',
     'URI pattern' => 'URI pattern',
-    'URI patterns Friends leaves alone entirely. Use `*` as a wildcard, or start with `re:` for a regular expression. The defaults cover the probes that generate most of a site\'s 404s and none of its lost visitors.' => 'URI patterns Friends leaves alone entirely. Use `*` as a wildcard, or start with `re:` for a regular expression. The defaults cover the probes that generate most of a site\'s 404s and none of its lost visitors.',
+    'URI patterns Friend leaves alone entirely. Use `*` as a wildcard, or start with `re:` for a regular expression. The defaults cover the probes that generate most of a site\'s 404s and none of its lost visitors.' => 'URI patterns Friend leaves alone entirely. Use `*` as a wildcard, or start with `re:` for a regular expression. The defaults cover the probes that generate most of a site\'s 404s and none of its lost visitors.',
     'URL' => 'URL',
     'Use the plugin default' => 'Use the plugin default',
     'Verdict' => 'Verdict',

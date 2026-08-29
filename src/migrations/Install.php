@@ -1,13 +1,13 @@
 <?php
 
-namespace justinholtweb\friends\migrations;
+namespace justinholtweb\friend\migrations;
 
 use craft\db\Migration;
 use craft\db\Table as CraftTable;
 use craft\helpers\StringHelper;
 use craft\elements\Entry;
-use justinholtweb\friends\db\Table;
-use justinholtweb\friends\models\Rule;
+use justinholtweb\friend\db\Table;
+use justinholtweb\friend\models\Rule;
 
 class Install extends Migration
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace justinholtweb\friends\models;
+namespace justinholtweb\friend\models;
 
 use Craft;
 use craft\base\Model;
 use craft\web\Request;
-use justinholtweb\friends\helpers\Similarity;
-use justinholtweb\friends\helpers\Uris;
+use justinholtweb\friend\helpers\Similarity;
+use justinholtweb\friend\helpers\Uris;
 
 /**
  * One 404: the URL that was asked for, pre-chewed into the pieces matching needs.
@@ -50,7 +50,7 @@ class Miss extends Model
 
     public static function fromUri(string $uri, ?int $siteId = null, array $config = []): self
     {
-        $settings = \justinholtweb\friends\Plugin::getInstance()->getSettings();
+        $settings = \justinholtweb\friend\Plugin::getInstance()->getSettings();
 
         $miss = new self($config);
         $miss->siteId = $siteId ?? Craft::$app->getSites()->getCurrentSite()->id;

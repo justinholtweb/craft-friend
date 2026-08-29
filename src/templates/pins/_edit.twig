@@ -3,17 +3,17 @@
 
 {% set selectedSubnavItem = 'pins' %}
 {% set fullPageForm = true %}
-{% set crumbs = [{ label: "Pins"|t('friends'), url: url('friends/pins') }] %}
+{% set crumbs = [{ label: "Pins"|t('friend'), url: url('friend/pins') }] %}
 
 {% block content %}
-    <input type="hidden" name="action" value="friends/pins/save">
-    {{ redirectInput('friends/pins') }}
+    <input type="hidden" name="action" value="friend/pins/save">
+    {{ redirectInput('friend/pins') }}
     {% if pin.id %}<input type="hidden" name="id" value="{{ pin.id }}">{% endif %}
 
     {{ forms.textField({
         first: true,
-        label: "URI"|t('friends'),
-        instructions: "The path that 404s, without the domain. A leading slash is fine — it is stripped either way."|t('friends'),
+        label: "URI"|t('friend'),
+        instructions: "The path that 404s, without the domain. A leading slash is fine — it is stripped either way."|t('friend'),
         id: 'uri',
         name: 'uri',
         class: 'code',
@@ -24,21 +24,21 @@
     }) }}
 
     {{ forms.selectField({
-        label: "Point at"|t('friends'),
+        label: "Point at"|t('friend'),
         id: 'targetType',
         name: 'targetType',
         value: pin.targetType,
         options: [
-            { value: 'element', label: "An entry"|t('friends') },
-            { value: 'url', label: "A URL"|t('friends') },
+            { value: 'element', label: "An entry"|t('friend') },
+            { value: 'url', label: "A URL"|t('friend') },
         ],
         toggle: true,
-        targetPrefix: '.friends-target-',
+        targetPrefix: '.friend-target-',
     }) }}
 
-    <div class="friends-target-element {{ pin.targetType == 'element' ? '' : 'hidden' }}">
+    <div class="friend-target-element {{ pin.targetType == 'element' ? '' : 'hidden' }}">
         {{ forms.elementSelectField({
-            label: "Entry"|t('friends'),
+            label: "Entry"|t('friend'),
             id: 'elementId',
             name: 'elementId',
             elementType: elementType,
@@ -48,10 +48,10 @@
         }) }}
     </div>
 
-    <div class="friends-target-url {{ pin.targetType == 'url' ? '' : 'hidden' }}">
+    <div class="friend-target-url {{ pin.targetType == 'url' ? '' : 'hidden' }}">
         {{ forms.textField({
-            label: "URL"|t('friends'),
-            instructions: "A site URI like `blog`, or a full URL to somewhere else entirely."|t('friends'),
+            label: "URL"|t('friend'),
+            instructions: "A site URI like `blog`, or a full URL to somewhere else entirely."|t('friend'),
             id: 'url',
             name: 'url',
             class: 'code',
@@ -69,7 +69,7 @@
     }) }}
 
     {{ forms.selectField({
-        label: "Redirect status"|t('friends'),
+        label: "Redirect status"|t('friend'),
         id: 'statusCode',
         name: 'statusCode',
         value: pin.statusCode,

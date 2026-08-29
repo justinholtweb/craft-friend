@@ -1,33 +1,33 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.lightswitchField({
-    label: "Look for friends"|t('friends'),
-    instructions: "The master switch. Off means Friends never looks at a 404 at all — no matching, no logging, no redirect."|t('friends'),
+    label: "Look for friend"|t('friend'),
+    instructions: "The master switch. Off means Friend never looks at a 404 at all — no matching, no logging, no redirect."|t('friend'),
     id: 'enabled',
     name: 'enabled',
     on: settings.enabled,
 }) }}
 
 {{ forms.selectField({
-    label: "Default redirect status"|t('friends'),
+    label: "Default redirect status"|t('friend'),
     instructions: "What a rule uses when it does not set its own.
 
-**302 on purpose.** A 301 is cached by the browser and by everything between it and your server, often for far longer than anyone intends — so a *guessed* permanent redirect that guesses wrong leaves a visitor unable to reach that URL again even after you fix the rule. Move a rule to 301 once its column in the 404 log shows it getting the answer right."|t('friends'),
+**302 on purpose.** A 301 is cached by the browser and by everything between it and your server, often for far longer than anyone intends — so a *guessed* permanent redirect that guesses wrong leaves a visitor unable to reach that URL again even after you fix the rule. Move a rule to 301 once its column in the 404 log shows it getting the answer right."|t('friend'),
     id: 'redirectStatusCode',
     name: 'redirectStatusCode',
     value: settings.redirectStatusCode,
     options: [
-        { value: 301, label: "301 — Moved permanently"|t('friends') },
-        { value: 302, label: "302 — Found (temporary)"|t('friends') },
-        { value: 307, label: "307 — Temporary redirect"|t('friends') },
-        { value: 308, label: "308 — Permanent redirect"|t('friends') },
+        { value: 301, label: "301 — Moved permanently"|t('friend') },
+        { value: 302, label: "302 — Found (temporary)"|t('friend') },
+        { value: 307, label: "307 — Temporary redirect"|t('friend') },
+        { value: 308, label: "308 — Permanent redirect"|t('friend') },
     ],
     errors: settings.getErrors('redirectStatusCode'),
 }) }}
 
 {{ forms.lightswitchField({
-    label: "Let config/redirects.php win"|t('friends'),
-    instructions: "Friends hooks the top of Craft's exception handling, which is *before* Craft reads `config/redirects.php`. With this on, Friends checks that file first and stands down when a rule in it already covers the URI — explicit beats inferred."|t('friends'),
+    label: "Let config/redirects.php win"|t('friend'),
+    instructions: "Friend hooks the top of Craft's exception handling, which is *before* Craft reads `config/redirects.php`. With this on, Friend checks that file first and stands down when a rule in it already covers the URI — explicit beats inferred."|t('friend'),
     id: 'honourConfigRedirects',
     name: 'honourConfigRedirects',
     on: settings.honourConfigRedirects,
@@ -35,25 +35,25 @@
 
 <hr>
 
-<h2>{{ "Guards"|t('friends') }}</h2>
+<h2>{{ "Guards"|t('friend') }}</h2>
 
-<p class="light">{{ "Checked before any rule. Friends already ignores control panel requests, action requests, previews and anything that is not a GET or HEAD."|t('friends') }}</p>
+<p class="light">{{ "Checked before any rule. Friend already ignores control panel requests, action requests, previews and anything that is not a GET or HEAD."|t('friend') }}</p>
 
 {{ forms.editableTableField({
-    label: "Never touch"|t('friends'),
-    instructions: "URI patterns Friends leaves alone entirely. Use `*` as a wildcard, or start with `re:` for a regular expression. The defaults cover the probes that generate most of a site's 404s and none of its lost visitors."|t('friends'),
+    label: "Never touch"|t('friend'),
+    instructions: "URI patterns Friend leaves alone entirely. Use `*` as a wildcard, or start with `re:` for a regular expression. The defaults cover the probes that generate most of a site's 404s and none of its lost visitors."|t('friend'),
     id: 'ignoredPatterns',
     name: 'ignoredPatterns',
     cols: {
         pattern: {
             type: 'singleline',
-            heading: "URI pattern"|t('friends'),
+            heading: "URI pattern"|t('friend'),
             placeholder: 'wp-*',
             code: true,
         },
     },
     rows: settings.ignoredPatterns|map(p => { pattern: p }),
-    addRowLabel: "Add a pattern"|t('friends'),
+    addRowLabel: "Add a pattern"|t('friend'),
     allowAdd: true,
     allowDelete: true,
     allowReorder: true,
@@ -61,20 +61,20 @@
 }) }}
 
 {{ forms.editableTableField({
-    label: "Extensions that stay 404"|t('friends'),
-    instructions: "A missing image or stylesheet is a broken reference, not a lost visitor — and redirecting one to an HTML page turns a visible 404 in the network panel into an invisible wrong-content-type bug."|t('friends'),
+    label: "Extensions that stay 404"|t('friend'),
+    instructions: "A missing image or stylesheet is a broken reference, not a lost visitor — and redirecting one to an HTML page turns a visible 404 in the network panel into an invisible wrong-content-type bug."|t('friend'),
     id: 'ignoredExtensions',
     name: 'ignoredExtensions',
     cols: {
         extension: {
             type: 'singleline',
-            heading: "Extension"|t('friends'),
+            heading: "Extension"|t('friend'),
             placeholder: 'jpg',
             code: true,
         },
     },
     rows: settings.ignoredExtensions|map(e => { extension: e }),
-    addRowLabel: "Add an extension"|t('friends'),
+    addRowLabel: "Add an extension"|t('friend'),
     allowAdd: true,
     allowDelete: true,
     allowReorder: true,
@@ -83,11 +83,11 @@
 
 <hr>
 
-<h2>{{ "Matching"|t('friends') }}</h2>
+<h2>{{ "Matching"|t('friend') }}</h2>
 
 {{ forms.textField({
-    label: "Candidate limit"|t('friends'),
-    instructions: "Most elements any one retrieval method may pull back before scoring. A rule can lower it; nothing raises it above this."|t('friends'),
+    label: "Candidate limit"|t('friend'),
+    instructions: "Most elements any one retrieval method may pull back before scoring. A rule can lower it; nothing raises it above this."|t('friend'),
     id: 'candidateLimit',
     name: 'candidateLimit',
     value: settings.candidateLimit,
@@ -97,8 +97,8 @@
 }) }}
 
 {{ forms.textField({
-    label: "Shortest word to compare"|t('friends'),
-    instructions: "Words shorter than this are ignored when comparing. Raising it past 3 starts throwing away real signal — plenty of pages are `/faq` or `/api`."|t('friends'),
+    label: "Shortest word to compare"|t('friend'),
+    instructions: "Words shorter than this are ignored when comparing. Raising it past 3 starts throwing away real signal — plenty of pages are `/faq` or `/api`."|t('friend'),
     id: 'minTokenLength',
     name: 'minTokenLength',
     value: settings.minTokenLength,
@@ -108,27 +108,27 @@
 }) }}
 
 {{ forms.editableTableField({
-    label: "Words to ignore"|t('friends'),
-    instructions: "House jargon, or a word that appears in every slug on the site and therefore tells Friends nothing. Common English words are already ignored."|t('friends'),
+    label: "Words to ignore"|t('friend'),
+    instructions: "House jargon, or a word that appears in every slug on the site and therefore tells Friend nothing. Common English words are already ignored."|t('friend'),
     id: 'extraStopWords',
     name: 'extraStopWords',
     cols: {
         word: {
             type: 'singleline',
-            heading: "Word"|t('friends'),
+            heading: "Word"|t('friend'),
             code: true,
         },
     },
     rows: settings.extraStopWords|map(w => { word: w }),
-    addRowLabel: "Add a word"|t('friends'),
+    addRowLabel: "Add a word"|t('friend'),
     allowAdd: true,
     allowDelete: true,
     errors: settings.getErrors('extraStopWords'),
 }) }}
 
 {{ forms.textField({
-    label: "Cache decisions for"|t('friends'),
-    instructions: "Seconds. Dead URLs get hammered — one broken link in a newsletter, one stale sitemap, one scanner working through a wordlist. The first request should pay for the search; the next thousand should not. 0 turns caching off. Saving a rule or a pin clears everything."|t('friends'),
+    label: "Cache decisions for"|t('friend'),
+    instructions: "Seconds. Dead URLs get hammered — one broken link in a newsletter, one stale sitemap, one scanner working through a wordlist. The first request should pay for the search; the next thousand should not. 0 turns caching off. Saving a rule or a pin clears everything."|t('friend'),
     id: 'cacheDuration',
     name: 'cacheDuration',
     value: settings.cacheDuration,
@@ -139,19 +139,19 @@
 
 <hr>
 
-<h2>{{ "The 404 log"|t('friends') }}</h2>
+<h2>{{ "The 404 log"|t('friend') }}</h2>
 
 {{ forms.lightswitchField({
-    label: "Record misses"|t('friends'),
-    instructions: "One row per site and URI with a hit counter, not one row per request. Also the only place you can see whether the guesses are any good."|t('friends'),
+    label: "Record misses"|t('friend'),
+    instructions: "One row per site and URI with a hit counter, not one row per request. Also the only place you can see whether the guesses are any good."|t('friend'),
     id: 'logMisses',
     name: 'logMisses',
     on: settings.logMisses,
 }) }}
 
 {{ forms.textField({
-    label: "Keep for"|t('friends'),
-    instructions: "Days since a URI was last asked for. 0 keeps everything."|t('friends'),
+    label: "Keep for"|t('friend'),
+    instructions: "Days since a URI was last asked for. 0 keeps everything."|t('friend'),
     id: 'logRetentionDays',
     name: 'logRetentionDays',
     value: settings.logRetentionDays,
@@ -161,8 +161,8 @@
 }) }}
 
 {{ forms.textField({
-    label: "Row cap"|t('friends'),
-    instructions: "Hard limit on log rows; the least recently seen go first. 0 means no cap. A site being scanned hard hits this long before anything ages out."|t('friends'),
+    label: "Row cap"|t('friend'),
+    instructions: "Hard limit on log rows; the least recently seen go first. 0 means no cap. A site being scanned hard hits this long before anything ages out."|t('friend'),
     id: 'logMaxRows',
     name: 'logMaxRows',
     value: settings.logMaxRows,

@@ -1,13 +1,13 @@
 <?php
 
-namespace justinholtweb\friends\db;
+namespace justinholtweb\friend\db;
 
 /**
- * Friends' database tables.
+ * Friend's database tables.
  */
 abstract class Table
 {
-    public const RULES = '{{%friends_rules}}';
-    public const PINS = '{{%friends_pins}}';
-    public const LOG = '{{%friends_log}}';
+    public const RULES = '{{%friend_rules}}';
+    public const PINS = '{{%friend_pins}}';
+    public const LOG = '{{%friend_log}}';
 }

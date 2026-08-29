@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\models;
+namespace justinholtweb\friend\models;
 
 use craft\base\Model;
 

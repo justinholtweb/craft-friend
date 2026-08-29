@@ -1,6 +1,6 @@
 {
-    "name": "justinholtweb/craft-friends",
-    "description": "Every dead URL has a friend. When a page 404s, Friends finds the entry the visitor was probably after and sends them there — under rules you write, with a threshold you set, and a log of every guess it made.",
+    "name": "justinholtweb/craft-friend",
+    "description": "Every dead URL has a friend. When a page 404s, Friend finds the entry the visitor was probably after and sends them there — under rules you write, with a threshold you set, and a log of every guess it made.",
     "version": "5.0.0",
     "type": "craft-plugin",
     "keywords": [
@@ -32,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "justinholtweb\\friends\\": "src/"
+            "justinholtweb\\friend\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "justinholtweb\\friends\\tests\\": "tests/"
+            "justinholtweb\\friend\\tests\\": "tests/"
         }
     },
     "config": {
@@ -47,12 +47,12 @@
         }
     },
     "extra": {
-        "name": "Friends",
-        "handle": "friends",
+        "name": "Friend",
+        "handle": "friend",
         "developer": "Justin Holt",
         "developerUrl": "https://justinholt.com",
-        "documentationUrl": "https://github.com/justinholtweb/craft-friends/blob/main/README.md",
-        "changelogUrl": "https://raw.githubusercontent.com/justinholtweb/craft-friends/main/CHANGELOG.md",
-        "class": "justinholtweb\\friends\\Plugin"
+        "documentationUrl": "https://github.com/justinholtweb/craft-friend/blob/main/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/justinholtweb/craft-friend/main/CHANGELOG.md",
+        "class": "justinholtweb\\friend\\Plugin"
     }
 }

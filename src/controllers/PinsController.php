@@ -1,13 +1,13 @@
 <?php
 
-namespace justinholtweb\friends\controllers;
+namespace justinholtweb\friend\controllers;
 
 use Craft;
 use craft\elements\Entry;
 use craft\web\Controller;
-use justinholtweb\friends\models\Pin;
-use justinholtweb\friends\models\Rule;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\models\Pin;
+use justinholtweb\friend\models\Rule;
+use justinholtweb\friend\Plugin;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -29,7 +29,7 @@ class PinsController extends Controller
 
     public function actionIndex(): Response
     {
-        return $this->renderTemplate('friends/pins/_index', [
+        return $this->renderTemplate('friend/pins/_index', [
             'pins' => Plugin::getInstance()->getPins()->getAllPins(),
         ]);
     }
@@ -48,22 +48,22 @@ class PinsController extends Controller
             }
         }
 
-        $statusCodeOptions = [['value' => '', 'label' => Craft::t('friends', 'Use the plugin default')]];
+        $statusCodeOptions = [['value' => '', 'label' => Craft::t('friend', 'Use the plugin default')]];
 
         foreach (Rule::statusCodes() as $value => $label) {
             $statusCodeOptions[] = ['value' => (string)$value, 'label' => $label];
         }
 
-        $siteOptions = [['value' => '', 'label' => Craft::t('friends', 'All sites')]];
+        $siteOptions = [['value' => '', 'label' => Craft::t('friend', 'All sites')]];
 
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
             $siteOptions[] = ['value' => (string)$site->id, 'label' => $site->name];
         }
 
-        return $this->renderTemplate('friends/pins/_edit', [
+        return $this->renderTemplate('friend/pins/_edit', [
             'pin' => $pin,
             'isNew' => !$pin->id,
-            'title' => $pin->id ? $pin->uri : Craft::t('friends', 'New pin'),
+            'title' => $pin->id ? $pin->uri : Craft::t('friend', 'New pin'),
             'statusCodeOptions' => $statusCodeOptions,
             'siteOptions' => $siteOptions,
             'elements' => $pin->getElement() ? [$pin->getElement()] : [],
@@ -97,14 +97,14 @@ class PinsController extends Controller
         $pin->url = $this->request->getBodyParam('url') ?: null;
 
         if (!$pins->savePin($pin)) {
-            $this->setFailFlash(Craft::t('friends', 'Couldn’t save the pin.'));
+            $this->setFailFlash(Craft::t('friend', 'Couldn’t save the pin.'));
 
             Craft::$app->getUrlManager()->setRouteParams(['pin' => $pin]);
 
             return null;
         }
 
-        $this->setSuccessFlash(Craft::t('friends', 'Pin saved.'));
+        $this->setSuccessFlash(Craft::t('friend', 'Pin saved.'));
 
         return $this->redirectToPostedUrl($pin);
     }
@@ -116,6 +116,6 @@ class PinsController extends Controller
 
         Plugin::getInstance()->getPins()->deletePinById((int)$this->request->getRequiredBodyParam('id'));
 
-        return $this->asSuccess(Craft::t('friends', 'Pin deleted.'));
+        return $this->asSuccess(Craft::t('friend', 'Pin deleted.'));
     }
 }

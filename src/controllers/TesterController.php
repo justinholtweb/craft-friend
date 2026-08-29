@@ -1,11 +1,11 @@
 <?php
 
-namespace justinholtweb\friends\controllers;
+namespace justinholtweb\friend\controllers;
 
 use Craft;
 use craft\web\Controller;
-use justinholtweb\friends\models\Miss;
-use justinholtweb\friends\Plugin;
+use justinholtweb\friend\models\Miss;
+use justinholtweb\friend\Plugin;
 use yii\web\Response;
 
 /**
@@ -45,7 +45,7 @@ class TesterController extends Controller
 
             if (!$matcher->uriIsEligible($miss->uri)) {
                 $eligible = false;
-                $ineligibleReason = Craft::t('friends', 'A guard stops this URI before any rule is consulted — it matches an ignored pattern, or has an ignored file extension.');
+                $ineligibleReason = Craft::t('friend', 'A guard stops this URI before any rule is consulted — it matches an ignored pattern, or has an ignored file extension.');
             } else {
                 // Traced, which also means uncached — the point of this screen is what the rules
                 // say *now*, not what they said an hour ago.
@@ -53,7 +53,7 @@ class TesterController extends Controller
             }
         }
 
-        return $this->renderTemplate('friends/tester/_index', [
+        return $this->renderTemplate('friend/tester/_index', [
             'uri' => $uri,
             'siteId' => $siteId,
             'miss' => $miss,

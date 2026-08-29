@@ -1,6 +1,6 @@
 <?php
 
-namespace justinholtweb\friends\models;
+namespace justinholtweb\friend\models;
 
 use Craft;
 use craft\base\ElementInterface;
@@ -8,7 +8,7 @@ use craft\base\Model;
 use DateTime;
 
 /**
- * One row of the 404 log: a URI, how often it has been asked for, and what Friends did about it.
+ * One row of the 404 log: a URI, how often it has been asked for, and what Friend did about it.
  *
  * Aggregated per site and URI rather than appended per request. A hit counter answers "what is
  * actually broken on this site" in one glance; a million-row request log answers it after a query

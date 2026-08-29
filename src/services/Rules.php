@@ -1,16 +1,16 @@
 <?php
 
-namespace justinholtweb\friends\services;
+namespace justinholtweb\friend\services;
 
 use Craft;
 use craft\base\Component;
 use craft\db\Query;
 use craft\helpers\Db;
 use craft\helpers\StringHelper;
-use justinholtweb\friends\db\Table;
-use justinholtweb\friends\models\Rule;
-use justinholtweb\friends\Plugin;
-use justinholtweb\friends\records\RuleRecord;
+use justinholtweb\friend\db\Table;
+use justinholtweb\friend\models\Rule;
+use justinholtweb\friend\Plugin;
+use justinholtweb\friend\records\RuleRecord;
 use Throwable;
 
 /**

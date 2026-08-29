@@ -1,11 +1,11 @@
 <?php
 
-namespace justinholtweb\friends\helpers;
+namespace justinholtweb\friend\helpers;
 
 /**
  * Path arithmetic.
  *
- * Everything in Friends compares URIs, and Craft hands them over in more than one shape — with a
+ * Everything in Friend compares URIs, and Craft hands them over in more than one shape — with a
  * leading slash from a request, without one from `elements.uri`, and as `__home__` for a site's
  * homepage. One normal form, applied at every boundary, is cheaper than remembering which shape
  * you are holding.
