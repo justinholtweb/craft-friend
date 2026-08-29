@@ -1,0 +1,86 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set selectedSubnavItem = 'pins' %}
+{% set fullPageForm = true %}
+{% set crumbs = [{ label: "Pins"|t('friends'), url: url('friends/pins') }] %}
+
+{% block content %}
+    <input type="hidden" name="action" value="friends/pins/save">
+    {{ redirectInput('friends/pins') }}
+    {% if pin.id %}<input type="hidden" name="id" value="{{ pin.id }}">{% endif %}
+
+    {{ forms.textField({
+        first: true,
+        label: "URI"|t('friends'),
+        instructions: "The path that 404s, without the domain. A leading slash is fine — it is stripped either way."|t('friends'),
+        id: 'uri',
+        name: 'uri',
+        class: 'code',
+        placeholder: 'blog/our-new-office',
+        value: pin.uri,
+        required: true,
+        errors: pin.getErrors('uri'),
+    }) }}
+
+    {{ forms.selectField({
+        label: "Point at"|t('friends'),
+        id: 'targetType',
+        name: 'targetType',
+        value: pin.targetType,
+        options: [
+            { value: 'element', label: "An entry"|t('friends') },
+            { value: 'url', label: "A URL"|t('friends') },
+        ],
+        toggle: true,
+        targetPrefix: '.friends-target-',
+    }) }}
+
+    <div class="friends-target-element {{ pin.targetType == 'element' ? '' : 'hidden' }}">
+        {{ forms.elementSelectField({
+            label: "Entry"|t('friends'),
+            id: 'elementId',
+            name: 'elementId',
+            elementType: elementType,
+            elements: elements,
+            limit: 1,
+            errors: pin.getErrors('elementId'),
+        }) }}
+    </div>
+
+    <div class="friends-target-url {{ pin.targetType == 'url' ? '' : 'hidden' }}">
+        {{ forms.textField({
+            label: "URL"|t('friends'),
+            instructions: "A site URI like `blog`, or a full URL to somewhere else entirely."|t('friends'),
+            id: 'url',
+            name: 'url',
+            class: 'code',
+            value: pin.url,
+            errors: pin.getErrors('url'),
+        }) }}
+    </div>
+
+    {{ forms.selectField({
+        label: "Site"|t('app'),
+        id: 'siteId',
+        name: 'siteId',
+        value: pin.siteId,
+        options: siteOptions,
+    }) }}
+
+    {{ forms.selectField({
+        label: "Redirect status"|t('friends'),
+        id: 'statusCode',
+        name: 'statusCode',
+        value: pin.statusCode,
+        options: statusCodeOptions,
+        errors: pin.getErrors('statusCode'),
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: "Enabled"|t('app'),
+        id: 'enabled',
+        name: 'enabled',
+        on: pin.enabled,
+    }) }}
+{% endblock %}

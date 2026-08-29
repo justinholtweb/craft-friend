@@ -1,0 +1,134 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "404 log"|t('friends') %}
+{% set selectedSubnavItem = 'log' %}
+
+{% set bodyClass = 'friends' %}
+{% do view.registerAssetBundle('justinholtweb\\friends\\web\\assets\\cp\\CpAsset') %}
+
+{% block content %}
+    <div class="friends-summary">
+        <div class="friends-stat">
+            <span class="friends-stat-number">{{ summary.total }}</span>
+            <span class="friends-stat-label">{{ "dead URLs"|t('friends') }}</span>
+        </div>
+        <div class="friends-stat">
+            <span class="friends-stat-number">{{ summary.hits }}</span>
+            <span class="friends-stat-label">{{ "requests"|t('friends') }}</span>
+        </div>
+        <div class="friends-stat friends-stat--good">
+            <span class="friends-stat-number">{{ summary.redirected }}</span>
+            <span class="friends-stat-label">{{ "sent somewhere"|t('friends') }}</span>
+        </div>
+        <div class="friends-stat">
+            <span class="friends-stat-number">{{ summary.unresolved }}</span>
+            <span class="friends-stat-label">{{ "still 404"|t('friends') }}</span>
+        </div>
+    </div>
+
+    <form method="get" class="friends-filters">
+        {{ forms.text({ name: 'search', value: options.search, placeholder: "Search URIs"|t('friends'), size: 24 }) }}
+        {{ forms.select({
+            name: 'status',
+            value: options.status,
+            options: [
+                { value: '', label: "Everything"|t('friends') },
+                { value: 'unresolved', label: "Still 404"|t('friends') },
+                { value: 'redirected', label: "Sent somewhere"|t('friends') },
+            ],
+        }) }}
+        {{ forms.select({
+            name: 'sort',
+            value: options.sort,
+            options: [
+                { value: 'dateLastHit', label: "Last seen"|t('friends') },
+                { value: 'hits', label: "Requests"|t('friends') },
+                { value: 'uri', label: "URI"|t('friends') },
+                { value: 'score', label: "Score"|t('friends') },
+            ],
+        }) }}
+        <button type="submit" class="btn">{{ "Filter"|t('friends') }}</button>
+    </form>
+
+    {% if entries|length %}
+        <table class="data fullwidth friends-log">
+            <thead>
+                <tr>
+                    <th>{{ "Requested"|t('friends') }}</th>
+                    <th class="thin">{{ "Hits"|t('friends') }}</th>
+                    <th>{{ "What happened"|t('friends') }}</th>
+                    <th class="thin">{{ "Score"|t('friends') }}</th>
+                    <th class="thin">{{ "Last seen"|t('friends') }}</th>
+                    <th class="thin"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                    <tr>
+                        <td>
+                            <code>/{{ entry.uri }}</code>
+                            {% if entry.referrer %}
+                                <div class="light smalltext">{{ "from"|t('friends') }} {{ entry.referrer }}</div>
+                            {% endif %}
+                        </td>
+                        <td class="thin">{{ entry.hits }}</td>
+                        <td>
+                            {% if entry.wasRedirected() %}
+                                <span class="friends-pill friends-pill--good">{{ entry.statusCode }}</span>
+                                <code>{{ entry.targetUrl }}</code>
+                                {% if entry.ruleName %}
+                                    <div class="light smalltext">{{ entry.source == 'pin' ? "pinned"|t('friends') : entry.ruleName }}</div>
+                                {% elseif entry.source == 'pin' %}
+                                    <div class="light smalltext">{{ "pinned"|t('friends') }}</div>
+                                {% endif %}
+                            {% else %}
+                                <span class="friends-pill">404</span>
+                                <span class="light">{{ "no rule decided"|t('friends') }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="thin">{{ entry.score is not null ? entry.score|number_format(1) : '—' }}</td>
+                        <td class="thin"><span class="light">{{ entry.dateLastHit ? entry.dateLastHit|datetime('short') : '—' }}</span></td>
+                        <td class="thin nowrap">
+                            {% if canPin and (entry.targetElementId or entry.targetUrl) %}
+                                <form method="post" class="friends-inline-form">
+                                    {{ csrfInput() }}
+                                    <input type="hidden" name="action" value="friends/log/pin">
+                                    <input type="hidden" name="id" value="{{ entry.id }}">
+                                    {{ redirectInput('friends/log') }}
+                                    <button type="submit" class="btn small" title="{{ "Make this answer permanent"|t('friends') }}">{{ "Pin"|t('friends') }}</button>
+                                </form>
+                            {% endif %}
+                            <a href="{{ url('friends/tester', { uri: entry.uri, siteId: entry.siteId }) }}" class="btn small">{{ "Test"|t('friends') }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if pageCount > 1 %}
+            <div class="friends-pagination">
+                {% for p in 1..pageCount %}
+                    {% if p == 1 or p == pageCount or (p > page - 3 and p < page + 3) %}
+                        {% set params = { page: p } %}
+                        {% if options.search %}{% set params = params|merge({ search: options.search }) %}{% endif %}
+                        {% if options.status %}{% set params = params|merge({ status: options.status }) %}{% endif %}
+                        {% if options.sort %}{% set params = params|merge({ sort: options.sort }) %}{% endif %}
+                        <a class="btn small {{ p == page ? 'active' : '' }}" href="{{ url('friends/log', params) }}">{{ p }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" class="friends-clear">
+            {{ csrfInput() }}
+            <input type="hidden" name="action" value="friends/log/clear">
+            {{ redirectInput('friends/log') }}
+            <button type="submit" class="btn small">{{ "Clear the whole log"|t('friends') }}</button>
+        </form>
+    {% else %}
+        <div class="zilch">
+            <p>{{ "Nothing here — which is either very good news or a sign that logging is switched off."|t('friends') }}</p>
+        </div>
+    {% endif %}
+{% endblock %}

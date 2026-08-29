@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 185 185" width="185" height="185">
+    <title>Friends</title>
+    <rect x="0" y="0" width="185" height="185" rx="35" fill="#123A2E"></rect>
+    <g transform="translate(11.5, 11.5) scale(1.62)">
+        <circle cx="22" cy="66" r="13" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-dasharray="9 8"></circle>
+        <path d="M 34 59 Q 48 50 58 38" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"></path>
+        <polygon points="65,29 63.4,42.8 52.2,34.4" fill="#FFFFFF"></polygon>
+        <circle cx="78" cy="28" r="13" fill="#4ECB8F"></circle>
+    </g>
+</svg>

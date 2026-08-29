@@ -1,0 +1,62 @@
+{% extends "_layouts/cp" %}
+
+{% set title = "Pins"|t('friends') %}
+{% set selectedSubnavItem = 'pins' %}
+{% do view.registerAssetBundle('justinholtweb\\friends\\web\\assets\\cp\\CpAsset') %}
+
+{% block actionButton %}
+    <a href="{{ url('friends/pins/new') }}" class="btn submit add icon">{{ "New pin"|t('friends') }}</a>
+{% endblock %}
+
+{% block content %}
+    <p class="light">
+        {{ "A pin is a stored answer for one exact URI, checked before any rule. It is how you fix the one URL the scoring gets wrong without making the rules worse for every other URL."|t('friends') }}
+    </p>
+
+    {% if pins|length %}
+        <table class="data fullwidth">
+            <thead>
+                <tr>
+                    <th>{{ "URI"|t('friends') }}</th>
+                    <th>{{ "Goes to"|t('friends') }}</th>
+                    <th class="thin">{{ "Site"|t('app') }}</th>
+                    <th class="thin">{{ "Hits"|t('friends') }}</th>
+                    <th class="thin">{{ "Enabled"|t('app') }}</th>
+                    <th class="thin"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pin in pins %}
+                    <tr>
+                        <td><a href="{{ pin.getCpEditUrl() }}"><code>/{{ pin.uri }}</code></a></td>
+                        <td>
+                            {% set element = pin.getElement() %}
+                            {% if element %}
+                                <a href="{{ element.getCpEditUrl() }}">{{ element.title }}</a>
+                                <span class="light"><code>/{{ element.uri }}</code></span>
+                            {% else %}
+                                <code>{{ pin.url ?? '—' }}</code>
+                            {% endif %}
+                        </td>
+                        <td class="thin"><span class="light">{{ pin.siteId ? craft.app.sites.getSiteById(pin.siteId).name : "All"|t('friends') }}</span></td>
+                        <td class="thin">{{ pin.hits }}</td>
+                        <td class="thin">{% if pin.enabled %}<span data-icon="check"></span>{% else %}<span class="light">—</span>{% endif %}</td>
+                        <td class="thin">
+                            <form method="post" class="friends-inline-form">
+                                {{ csrfInput() }}
+                                <input type="hidden" name="action" value="friends/pins/delete">
+                                <input type="hidden" name="id" value="{{ pin.id }}">
+                                {{ redirectInput('friends/pins') }}
+                                <button type="submit" class="btn small">{{ "Delete"|t('app') }}</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="zilch">
+            <p>{{ "No pins. Add one here, or press Pin on a row in the 404 log once Friends has proved it picks the right target."|t('friends') }}</p>
+        </div>
+    {% endif %}
+{% endblock %}
