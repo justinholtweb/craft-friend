@@ -171,6 +171,13 @@ try {
     check('re: patterns are treated as regular expressions', fn() => Uris::matchesPattern('blog/2024/x', 're:^blog/\d{4}/'));
     check('a broken re: pattern does not throw', fn() => Uris::matchesPattern('anything', 're:([') === false);
     check('matchesAny ignores non-strings', fn() => Uris::matchesAny('wp-login.php', [null, 42, 'wp-*']));
+    check('ancestors stop at the cap, nearest first', function() {
+        $ancestors = Uris::ancestors(implode('/', array_fill(0, 200, 'a')) . '/x');
+
+        return count($ancestors) === Uris::MAX_ANCESTORS && substr_count($ancestors[0], '/') === 199;
+    });
+    check('a site URI and http(s) URLs are safe targets', fn() => Uris::isSafeTarget('blog') && Uris::isSafeTarget('/blog') && Uris::isSafeTarget('https://example.com/a') && Uris::isSafeTarget('//example.com'));
+    check('other schemes are not safe targets', fn() => !Uris::isSafeTarget('javascript:alert(1)') && !Uris::isSafeTarget('data:text/html,x') && !Uris::isSafeTarget('https:evil.com'));
 
     // ------------------------------------------------------------------ Similarity
 
@@ -423,6 +430,15 @@ try {
 
         return count($found) === 1 && str_ends_with($found[0]->uri, PREFIX . 'hub');
     });
+    check('element-query syntax in a URI is taken literally', function() use ($candidates, $baseRule, $siteId) {
+        $slug = $candidates->find($baseRule(['methods' => [Rule::METHOD_SLUG]]), Miss::fromUri('news/*', $siteId));
+        $ancestor = $candidates->find(
+            $baseRule(['methods' => [Rule::METHOD_ANCESTOR]]),
+            Miss::fromUri('nothing,live-test/' . PREFIX . 'hub/x', $siteId),
+        );
+
+        return $slug === [] && $ancestor === [];
+    });
     check('ancestor score is the share of the path that survived', function() use ($candidates, $baseRule, $siteId) {
         $rule = $baseRule(['methods' => [Rule::METHOD_ANCESTOR]]);
         $found = $candidates->find($rule, Miss::fromUri('live-test/' . PREFIX . 'hub/a-child', $siteId));
@@ -653,6 +669,11 @@ try {
     check('a pin resolves an element to its URL', function() use ($pins, $siteId) {
         return str_ends_with((string)$pins->find($siteId, PREFIX . 'pinned-path')?->getTargetUrl(), PREFIX . 'seo-audits');
     });
+    check('a URL pin refuses a javascript: target', function() use ($siteId) {
+        $pin = new Pin(['siteId' => $siteId, 'uri' => 'x', 'targetType' => Pin::TARGET_URL, 'url' => 'javascript:alert(1)']);
+
+        return !$pin->validate() && $pin->hasErrors('url');
+    });
     check('a URL pin resolves a bare URI against the site', function() use ($siteId) {
         $pin = new Pin(['siteId' => $siteId, 'uri' => 'x', 'targetType' => Pin::TARGET_URL, 'url' => 'somewhere']);
 
@@ -814,7 +835,7 @@ try {
 
         $second = $matcher->resolve($miss);
 
-        Craft::$app->getDb()->createCommand()->update(Table::RULES, ['enabled' => true])->execute();
+        Craft::$app->getDb()->createCommand()->update(Table::RULES, ['enabled' => true], ['handle' => 'friendCheckRule'])->execute();
 
         return $first->targetUrl === $second->targetUrl && $second->targetUrl !== null;
     });
@@ -824,7 +845,7 @@ try {
 
         $outcome = $matcher->resolve(Miss::fromUri('news/' . PREFIX . 'our-new-office', $siteId));
 
-        Craft::$app->getDb()->createCommand()->update(Table::RULES, ['enabled' => true])->execute();
+        Craft::$app->getDb()->createCommand()->update(Table::RULES, ['enabled' => true], ['handle' => 'friendCheckRule'])->execute();
         $rules->clearCaches();
 
         return !$outcome->matched();
@@ -839,10 +860,21 @@ try {
             Craft::$app->getDb()->createCommand()->update(Table::RULES, ['enabled' => false])->execute();
             $rules->clearCaches();
             $second = $matcher->resolve($miss);
-            Craft::$app->getDb()->createCommand()->update(Table::RULES, ['enabled' => true])->execute();
+            Craft::$app->getDb()->createCommand()->update(Table::RULES, ['enabled' => true], ['handle' => 'friendCheckRule'])->execute();
             $rules->clearCaches();
 
             return !$second->matched();
+        });
+    });
+    check('a declined miss keeps its candidates on the second resolve', function() use ($matcher, $withRule, $settings, $siteId) {
+        $settings->cacheDuration = 60;
+
+        return $withRule(['action' => Rule::ACTION_REDIRECT, 'threshold' => 100, 'fallback' => Rule::FALLBACK_NONE], function() use ($matcher, $siteId) {
+            $miss = Miss::fromUri('news/' . PREFIX . 'our-new-officee', $siteId);
+            $first = $matcher->resolve($miss);
+            $second = $matcher->resolve($miss);
+
+            return !$first->matched() && $first->candidates && $second->candidates;
         });
     });
 
@@ -876,6 +908,17 @@ try {
     });
     check('missedUri is empty outside a web request', function() {
         return (new FriendVariable())->missedUri() === '';
+    });
+    check('the master switch silences the tags', function() use ($withRule, $settings) {
+        return $withRule(['action' => Rule::ACTION_REDIRECT, 'threshold' => 55], function() use ($settings) {
+            $settings->enabled = false;
+            $variable = new FriendVariable();
+            $silent = $variable->suggestions(3, 'news/' . PREFIX . 'our-new-office') === []
+                && $variable->outcome('news/' . PREFIX . 'our-new-office') === null;
+            $settings->enabled = true;
+
+            return $silent;
+        });
     });
 
     foreach ($otherRuleIds as $id) {

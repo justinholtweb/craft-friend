@@ -111,8 +111,9 @@ class PinsController extends Controller
 
     public function actionDelete(): Response
     {
+        // Posted by a plain form on the pins index, so no requireAcceptsJson() — asSuccess()
+        // redirects to the posted URL with a flash when the request is not JSON.
         $this->requirePostRequest();
-        $this->requireAcceptsJson();
 
         Plugin::getInstance()->getPins()->deletePinById((int)$this->request->getRequiredBodyParam('id'));
 

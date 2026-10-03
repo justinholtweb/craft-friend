@@ -1,7 +1,6 @@
 {
     "name": "justinholtweb/craft-friend",
     "description": "Every dead URL has a friend. When a page 404s, Friend finds the entry the visitor was probably after and sends them there — under rules you write, with a threshold you set, and a log of every guess it made.",
-    "version": "5.0.0",
     "type": "craft-plugin",
     "keywords": [
         "craftcms",
@@ -13,6 +12,7 @@
         "fuzzy-matching"
     ],
     "license": "proprietary",
+    "homepage": "https://justinholt.com/plugins/craft-friend",
     "authors": [
         {
             "name": "Justin Holt",
@@ -20,7 +20,10 @@
         }
     ],
     "support": {
-        "email": "justin@justinholt.com"
+        "email": "justin@justinholt.com",
+        "docs": "https://justinholt.com/plugins/craft-friend/docs",
+        "source": "https://github.com/justinholtweb/craft-friend",
+        "issues": "https://github.com/justinholtweb/craft-friend/issues"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -51,7 +54,7 @@
         "handle": "friend",
         "developer": "Justin Holt",
         "developerUrl": "https://justinholt.com",
-        "documentationUrl": "https://github.com/justinholtweb/craft-friend/blob/main/README.md",
+        "documentationUrl": "https://justinholt.com/plugins/craft-friend/docs",
         "changelogUrl": "https://raw.githubusercontent.com/justinholtweb/craft-friend/main/CHANGELOG.md",
         "class": "justinholtweb\\friend\\Plugin"
     }

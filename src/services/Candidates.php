@@ -8,6 +8,7 @@ use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\elements\Category;
 use craft\elements\Entry;
+use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use justinholtweb\friend\helpers\Similarity;
 use justinholtweb\friend\helpers\Uris;
@@ -133,7 +134,7 @@ class Candidates extends Component
         }
 
         return $this->_baseQuery($rule, $miss)
-            ->slug($miss->slug)
+            ->slug(Db::escapeParam($miss->slug))
             ->limit(min($limit, 25))
             ->asArray()
             ->all();
@@ -219,7 +220,7 @@ class Candidates extends Component
 
         foreach ($ancestors as $ancestor) {
             $rows = $this->_baseQuery($rule, $miss)
-                ->uri($ancestor)
+                ->uri(Db::escapeParam($ancestor))
                 ->limit(1)
                 ->asArray()
                 ->all();

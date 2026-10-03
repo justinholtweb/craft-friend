@@ -15,6 +15,9 @@ abstract class Uris
     /** What Craft stores in `elements.uri` for a site's homepage. */
     public const HOMEPAGE = '__home__';
 
+    /** How many ancestors the ancestor method may try, nearest first. */
+    public const MAX_ANCESTORS = 10;
+
     /**
      * The normal form: no scheme, no host, no query, no fragment, no leading or trailing slash.
      *
@@ -42,6 +45,22 @@ abstract class Uris
         $uri = (string)preg_replace('~/{2,}~', '/', $uri);
 
         return trim($uri, '/');
+    }
+
+    /**
+     * Whether a hand-typed redirect target is one a browser should be sent to: a site URI, or an
+     * http(s) URL. `javascript:`, `data:` and the like are refused, as is `https:evil.com`, which
+     * a browser on an http page resolves to another host.
+     */
+    public static function isSafeTarget(string $target): bool
+    {
+        $target = trim($target);
+
+        if (!preg_match('~^[a-z][a-z0-9+.-]*:~i', $target)) {
+            return true;
+        }
+
+        return preg_match('~^https?://~i', $target) === 1;
     }
 
     /** @return string[] */
@@ -91,6 +110,9 @@ abstract class Uris
      * `blog/2024/some-post` → `blog/2024`, `blog`. The URI itself is never included: it is the one
      * path known not to exist.
      *
+     * Only the nearest MAX_ANCESTORS are returned. Each is a query, and a scanner will happily send
+     * a path with thousands of segments.
+     *
      * @return string[]
      */
     public static function ancestors(string $uri): array
@@ -98,7 +120,7 @@ abstract class Uris
         $segments = self::segments($uri);
         $ancestors = [];
 
-        while (count($segments) > 1) {
+        while (count($segments) > 1 && count($ancestors) < self::MAX_ANCESTORS) {
             array_pop($segments);
             $ancestors[] = implode('/', $segments);
         }

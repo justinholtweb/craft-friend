@@ -35,6 +35,11 @@ class FriendVariable extends BaseObject
      */
     public function outcome(?string $uri = null): ?Outcome
     {
+        // The master switch means no matching anywhere, a template's own call included.
+        if (!$this->enabled()) {
+            return null;
+        }
+
         $matcher = Plugin::getInstance()->getMatcher();
 
         if ($uri === null) {

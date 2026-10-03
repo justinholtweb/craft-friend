@@ -87,7 +87,7 @@
 
 {{ forms.textField({
     label: "Candidate limit"|t('friend'),
-    instructions: "Most elements any one retrieval method may pull back before scoring. A rule can lower it; nothing raises it above this."|t('friend'),
+    instructions: "Most elements any one retrieval method may pull back before scoring. A rule can set its own limit instead, up to 500."|t('friend'),
     id: 'candidateLimit',
     name: 'candidateLimit',
     value: settings.candidateLimit,

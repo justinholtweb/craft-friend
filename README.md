@@ -198,10 +198,10 @@ php craft friend/log/clear                                  # empty the log
 
 | permission | what it allows |
 | --- | --- |
-| View the 404 log | the log and the tester |
+| View the 404 log | the log and the tester, read-only |
 | Create and edit pins | pins, and the **Pin** button on the log |
-| Create and edit rules | the rule set |
+| Create and edit rules | the rule set, and clearing the log |
 
 ## Licence
 
-MIT. See `LICENSE.md`.
+The Craft License — free to use, no licence key. See `LICENSE.md`.

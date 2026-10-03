@@ -384,7 +384,12 @@ class Matcher extends Component
         $outcome->rule = $rule;
         $outcome->candidates = $candidates;
         $outcome->action = Rule::ACTION_REDIRECT;
-        $outcome->targetUrl = Plugin::getInstance()->getCandidates()->urlFor($rule->fallbackUrl, $outcome->miss->siteId);
+        // "A site URI, or a full URL" — the same reading a URL pin gets. A full URL handed to
+        // urlFor() would be normalised down to its path on the current site.
+        $fallbackUrl = trim((string)$rule->fallbackUrl);
+        $outcome->targetUrl = preg_match('~^([a-z][a-z0-9+.-]*:)?//~i', $fallbackUrl) === 1
+            ? $fallbackUrl
+            : Plugin::getInstance()->getCandidates()->urlFor($fallbackUrl, $outcome->miss->siteId);
         $outcome->statusCode = $rule->statusCode ?? $settings->redirectStatusCode;
 
         return $outcome->targetUrl !== null;
@@ -457,7 +462,9 @@ class Matcher extends Component
 
         $miss = Miss::fromRequest($request);
 
-        if ($miss->uri === '') {
+        // The same guards the error handler applies: a scanner's `/wp-login.php` should cost a
+        // 404 template's suggestions tag nothing, and neither should anything when Friend is off.
+        if ($miss->uri === '' || !Plugin::getInstance()->getSettings()->enabled || !$this->uriIsEligible($miss->uri)) {
             return null;
         }
 
@@ -546,10 +553,20 @@ class Matcher extends Component
             return;
         }
 
+        // With no explicit @web, Craft builds site URLs from the request's own Host header, so a
+        // target built for one visitor was built from whatever host *they* sent. Caching it would
+        // hand an attacker's host to everyone who follows the same dead link.
+        $request = Craft::$app->getRequest();
+
+        if ($request instanceof WebRequest && $request->isWebAliasSetDynamically) {
+            return;
+        }
+
         // A suggestion outcome is a list of candidates, and a list of candidates is exactly what
         // this cache does not store. Caching the decision without them would serve an empty "did
-        // you mean" list for an hour.
-        if ($outcome->action === Rule::ACTION_SUGGEST) {
+        // you mean" list for an hour. The same goes for a miss no rule decided but that still
+        // carries the candidates a declining rule found.
+        if ($outcome->action === Rule::ACTION_SUGGEST || ($outcome->action === Rule::ACTION_NONE && $outcome->candidates)) {
             return;
         }
 

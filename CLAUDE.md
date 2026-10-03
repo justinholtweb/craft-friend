@@ -106,7 +106,7 @@ See also `[[craft-plugin-gotchas]]` in the shared memory for family-wide traps.
 No local PHP on this Mac. Everything runs inside the plugin-testing container:
 
 ```sh
-docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friend/tests/integration/checks.php   # 125 checks
+docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friend/tests/integration/checks.php   # 132 checks
 docker exec ddev-plugin-testing-web bash -c 'find /var/www/craft-friend/src -name "*.php" -print0 | xargs -0 -n1 php -l'
 ```
 

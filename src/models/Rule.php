@@ -11,6 +11,7 @@ use craft\helpers\UrlHelper;
 use craft\validators\HandleValidator;
 use craft\validators\UniqueValidator;
 use DateTime;
+use justinholtweb\friend\helpers\Uris;
 use justinholtweb\friend\records\RuleRecord;
 
 /**
@@ -309,8 +310,14 @@ class Rule extends Model
 
     public function validateFallbackUrl(string $attribute): void
     {
-        if ($this->fallback === self::FALLBACK_URL && trim((string)$this->fallbackUrl) === '') {
+        if ($this->fallback !== self::FALLBACK_URL) {
+            return;
+        }
+
+        if (trim((string)$this->fallbackUrl) === '') {
             $this->addError($attribute, Craft::t('friend', 'A fallback needs somewhere to go.'));
+        } elseif (!Uris::isSafeTarget((string)$this->fallbackUrl)) {
+            $this->addError($attribute, Craft::t('friend', 'Use a site URI or an http(s) URL.'));
         }
     }
 

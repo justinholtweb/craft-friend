@@ -214,7 +214,8 @@ class Log extends Component
         }
 
         if (!empty($options['search'])) {
-            $search = str_replace(['%', '_'], ['\%', '\_'], (string)$options['search']);
+            // Yii's `like` escapes % and _ itself; doing it here as well escapes the escapes.
+            $search = (string)$options['search'];
             $query->andWhere(['or',
                 ['like', 'uri', $search],
                 ['like', 'targetUrl', $search],

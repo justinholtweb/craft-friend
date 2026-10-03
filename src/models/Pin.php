@@ -92,7 +92,7 @@ class Pin extends Model
     {
         return [
             [['uri', 'targetType'], 'required'],
-            [['uri', 'url'], 'string'],
+            [['uri', 'url'], 'string', 'max' => 500],
             [['enabled'], 'boolean'],
             [['siteId', 'elementId', 'hits'], 'integer'],
             [['statusCode'], 'in', 'range' => array_keys(Rule::statusCodes()), 'skipOnEmpty' => true],
@@ -115,6 +115,8 @@ class Pin extends Model
 
         if (trim((string)$this->url) === '') {
             $this->addError('url', Craft::t('friend', 'A pin needs somewhere to go.'));
+        } elseif (!Uris::isSafeTarget((string)$this->url)) {
+            $this->addError('url', Craft::t('friend', 'Use a site URI or an http(s) URL.'));
         }
     }
 

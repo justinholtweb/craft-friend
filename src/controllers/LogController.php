@@ -60,6 +60,7 @@ class LogController extends Controller
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
+        $this->requirePermission(Plugin::PERMISSION_MANAGE_RULES);
 
         Plugin::getInstance()->getLog()->deleteById((int)$this->request->getRequiredBodyParam('id'));
 
@@ -68,7 +69,10 @@ class LogController extends Controller
 
     public function actionClear(): Response
     {
+        // Viewing the log is a read-only grant; emptying it destroys the record of what was
+        // redirected where, so it takes the same permission as the rules that did it.
         $this->requirePostRequest();
+        $this->requirePermission(Plugin::PERMISSION_MANAGE_RULES);
 
         $deleted = Plugin::getInstance()->getLog()->clear();
 
