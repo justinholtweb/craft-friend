@@ -38,7 +38,8 @@ a rule to 301 once the log shows it getting the answer right. See
 
 No. Explicit redirects are for URLs you know about; Friend is for the ones you don't. By default
 Friend stands down whenever `config/redirects.php` already matches the request. For a single URL you
-know the answer to, a [pin](usage#pins) does the same job inside Friend.
+know the answer to, a [pin](usage#pins) does the same job inside Friend — and a redirect map
+from another tool can be [imported as pins](usage#importing-and-exporting-pins).
 
 ## Will it redirect to entries in any section?
 

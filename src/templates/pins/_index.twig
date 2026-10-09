@@ -5,7 +5,13 @@
 {% do view.registerAssetBundle('justinholtweb\\friend\\web\\assets\\cp\\CpAsset') %}
 
 {% block actionButton %}
-    <a href="{{ url('friend/pins/new') }}" class="btn submit add icon">{{ "New pin"|t('friend') }}</a>
+    <div class="flex">
+        {% if pins|length %}
+            <a href="{{ actionUrl('friend/pins/export') }}" class="btn">{{ "Export CSV"|t('friend') }}</a>
+        {% endif %}
+        <a href="{{ url('friend/pins/import') }}" class="btn">{{ "Import CSV"|t('friend') }}</a>
+        <a href="{{ url('friend/pins/new') }}" class="btn submit add icon">{{ "New pin"|t('friend') }}</a>
+    </div>
 {% endblock %}
 
 {% block content %}

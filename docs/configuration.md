@@ -99,7 +99,7 @@ edited per environment in the control panel.
 | Permission | What it allows |
 |---|---|
 | **View the 404 log** | The 404 log and the tester. Read-only: clearing the log needs **Create and edit rules** |
-| ↳ **Create and edit pins** | The Pins screen, and the **Pin** button on the log |
+| ↳ **Create and edit pins** | The Pins screen, the **Pin** button on the log, and importing and exporting pins as CSV. Only an admin can let an import point pins at other hosts |
 | ↳ **Create and edit rules** | The Rules screen, and clearing the 404 log |
 
 The two editing permissions are nested under **View the 404 log**. A user also needs Craft's own

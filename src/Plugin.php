@@ -18,6 +18,7 @@ use justinholtweb\friend\services\Candidates;
 use justinholtweb\friend\services\Log;
 use justinholtweb\friend\services\Matcher;
 use justinholtweb\friend\services\Pins;
+use justinholtweb\friend\services\PinTransfer;
 use justinholtweb\friend\services\Rules;
 use justinholtweb\friend\twig\FriendVariable;
 use yii\base\Event;
@@ -27,6 +28,7 @@ use yii\base\Event;
  *
  * @property-read Rules $rules
  * @property-read Pins $pins
+ * @property-read PinTransfer $pinTransfer
  * @property-read Matcher $matcher
  * @property-read Candidates $candidates
  * @property-read Log $log
@@ -53,6 +55,7 @@ class Plugin extends BasePlugin
             'components' => [
                 'rules' => Rules::class,
                 'pins' => Pins::class,
+                'pinTransfer' => PinTransfer::class,
                 'matcher' => Matcher::class,
                 'candidates' => Candidates::class,
                 'log' => Log::class,
@@ -79,6 +82,11 @@ class Plugin extends BasePlugin
     public function getPins(): Pins
     {
         return $this->get('pins');
+    }
+
+    public function getPinTransfer(): PinTransfer
+    {
+        return $this->get('pinTransfer');
     }
 
     public function getMatcher(): Matcher
@@ -180,6 +188,7 @@ class Plugin extends BasePlugin
                 'friend/log' => 'friend/log/index',
                 'friend/pins' => 'friend/pins/index',
                 'friend/pins/new' => 'friend/pins/edit',
+                'friend/pins/import' => 'friend/pins/import',
                 'friend/pins/<pinId:\d+>' => 'friend/pins/edit',
                 'friend/tester' => 'friend/tester/index',
             ];

@@ -5,9 +5,13 @@ namespace justinholtweb\friend\controllers;
 use Craft;
 use craft\elements\Entry;
 use craft\web\Controller;
+use craft\web\UploadedFile;
+use justinholtweb\friend\helpers\Csv;
 use justinholtweb\friend\models\Pin;
+use justinholtweb\friend\models\PinImport;
 use justinholtweb\friend\models\Rule;
 use justinholtweb\friend\Plugin;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -118,5 +122,81 @@ class PinsController extends Controller
         Plugin::getInstance()->getPins()->deletePinById((int)$this->request->getRequiredBodyParam('id'));
 
         return $this->asSuccess(Craft::t('friend', 'Pin deleted.'));
+    }
+
+    /**
+     * The import form, and — after an upload — what the import did.
+     */
+    public function actionImport(?PinImport $result = null): Response
+    {
+        $siteOptions = [['value' => '', 'label' => Craft::t('friend', 'All sites')]];
+
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+            $siteOptions[] = ['value' => (string)$site->id, 'label' => $site->name];
+        }
+
+        return $this->renderTemplate('friend/pins/_import', [
+            'result' => $result,
+            'siteOptions' => $siteOptions,
+            'maxKb' => intdiv(Csv::MAX_BYTES, 1024),
+            'maxRows' => Csv::MAX_ROWS,
+            'canAllowExternal' => Craft::$app->getUser()->getIsAdmin(),
+        ]);
+    }
+
+    /**
+     * Run an uploaded CSV through the importer.
+     *
+     * The file is read from PHP's upload temp file and never stored. Only an admin may let a file
+     * point pins at other hosts — for anyone else every destination has to be on this site.
+     */
+    public function actionUpload(): Response
+    {
+        $this->requirePostRequest();
+
+        $file = UploadedFile::getInstanceByName('file');
+
+        if ($file === null || $file->getHasError()) {
+            throw new BadRequestHttpException('No CSV file was uploaded.');
+        }
+
+        $result = new PinImport(['dryRun' => (bool)$this->request->getBodyParam('dryRun')]);
+
+        if ($file->size > Csv::MAX_BYTES) {
+            $result->fileError = Craft::t('friend', 'The file is larger than {kb} KB.', ['kb' => intdiv(Csv::MAX_BYTES, 1024)]);
+        } else {
+            $siteId = $this->request->getBodyParam('siteId');
+
+            $result = Plugin::getInstance()->getPinTransfer()->import($file->tempName, [
+                'siteId' => $siteId === '' || $siteId === null ? null : (int)$siteId,
+                'update' => (bool)$this->request->getBodyParam('update'),
+                'dryRun' => $result->dryRun,
+                'linkElements' => (bool)$this->request->getBodyParam('linkElements', true),
+                'allowExternal' => Craft::$app->getUser()->getIsAdmin() && $this->request->getBodyParam('allowExternal'),
+            ]);
+        }
+
+        if ($result->fileError !== null) {
+            $this->setFailFlash($result->fileError);
+        } elseif ($result->dryRun) {
+            $this->setSuccessFlash(Craft::t('friend', 'Dry run — nothing was saved.'));
+        } else {
+            $this->setSuccessFlash(Craft::t('friend', 'Pins imported.'));
+        }
+
+        return $this->actionImport($result);
+    }
+
+    /**
+     * Download every pin as CSV.
+     */
+    public function actionExport(): Response
+    {
+        $siteId = $this->request->getQueryParam('siteId');
+        $csv = Plugin::getInstance()->getPinTransfer()->export($siteId ? (int)$siteId : null);
+
+        return $this->response->sendContentAsFile($csv, 'friend-pins-' . date('Y-m-d') . '.csv', [
+            'mimeType' => 'text/csv',
+        ]);
     }
 }

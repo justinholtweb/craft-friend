@@ -2,6 +2,25 @@
 
 All notable changes to Friend are documented here.
 
+## Unreleased
+
+### Added
+
+- **Pin import and export (CSV).** **Pins → Import CSV** and `php craft friend/pins/import` bring
+  an old site's redirect map in as pins, so a migration's known redirects are answered before any
+  rule guesses. Columns are read by header — `from`/`to`, or the names Retour, Redirect Manager and
+  most spreadsheets use, plus optional `status`, `site`, `enabled` and `pointsAt` — and a file with
+  no header is read as `from,to,status`. Dry run, overwrite-existing, and linking a destination to
+  the entry at that URI (so the pin follows it) are all switches.
+- Every imported row is validated and refused rows are reported by line number. Destinations must
+  be on this site — a path, or a full URL on one of the install's own hosts, stored as a path — so
+  an imported file can't turn the site into an open redirect; only an admin can allow other hosts.
+  Regex rows are refused (they are rules, not pins). Files are capped at 2 MB and 10,000 rows.
+- **Pins → Export CSV** and `php craft friend/pins/export` write the importer's own columns, so an
+  export imports back as the same pins. Cells a spreadsheet would run as a formula are defused.
+- 51 integration checks for import/export and 18 HTTP checks for the upload and export actions'
+  permission, POST and CSRF requirements.
+
 ## 5.0.0 — 2026-08-18
 
 Initial release. Versioned 5.x to match the Craft major it targets, as the rest of this plugin

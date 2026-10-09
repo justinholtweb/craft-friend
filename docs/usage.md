@@ -2,7 +2,7 @@
 title: Usage
 slug: usage
 order: 40
-summary: The 404 log, pins, the tester, Twig, console commands and caching.
+summary: The 404 log, pins (and importing them from CSV), the tester, Twig, console commands and caching.
 ---
 
 ## What happens on a 404
@@ -61,6 +61,56 @@ There are two ways to make one:
 A pin that points at an entry follows the entry: if its URI changes, the pin's redirect changes
 with it. A pin whose target no longer resolves, or would point back at the URI that missed, is
 skipped and the rules get their turn. Each pin counts its hits.
+
+### Importing and exporting pins
+
+A migration usually arrives with a redirect map — the old site's Retour or Redirect Manager
+export, a WordPress plugin's CSV, a spreadsheet somebody kept. Import it as pins and the redirects
+you already know are answered before any rule guesses.
+
+**Friend → Pins → Import CSV**, or `php craft friend/pins/import`. Columns are read by header:
+
+| Column | Also accepted as | Notes |
+|---|---|---|
+| `from` | `source`, `old`, `uri`, `path`, `Legacy URL Pattern`, `redirectSrcUrl`, … | The URI that 404s. A full URL is fine — only its path is kept |
+| `to` | `destination`, `target`, `new`, `url`, `Redirect To`, `redirectDestUrl`, … | Where it goes. See below |
+| `status` | `statusCode`, `code`, `HTTP Status`, `redirectHttpCode` | `301`, `302`, `307` or `308`; blank uses the plugin default |
+| `site` | `siteHandle`, `siteId` | A site handle or ID; blank uses the site chosen for the import, or all sites |
+| `enabled` | `active` | `0`, `false`, `no` or `off` imports the pin disabled |
+| `pointsAt` | | `entry` or `url` — written by the export so a file imports back exactly |
+| `Match Type` | `redirectMatchType` | Rows marked as regex are refused: a pattern is a [rule](rules), not a pin |
+
+A file with no recognisable header is read as `from,to,status`. Comma, semicolon and tab
+delimiters all work, and a file Excel saved as Windows-1252 is converted.
+
+**Destinations must be on this site.** A pin is a redirect, so a file that could plant
+`https://elsewhere.example` behind one of your URLs would make your site an open redirect. A
+destination is accepted when it is a path (`/about`, `about?tab=team`) or a full http(s) URL on one
+of this install's site hosts (compared without the port or a leading `www.`), which is stored as a
+path. Protocol-relative `//host` destinations, other schemes, backslashes, spaces and control
+characters are refused. An admin can switch on **Allow destinations on other hosts** (console:
+`--allow-external`) for a file they have read.
+
+**Point at entries** (on by default; console `--link-elements=0` to turn off): when a destination
+is exactly an entry's URI on the pin's site, the pin points at the entry, so it follows the entry if
+its URI changes later.
+
+A URI that already has a pin is left alone unless you switch on **Overwrite existing pins**
+(`--update`), which keeps the pin's hit count. **Dry run** (`--dry-run`) checks every row and
+reports, without saving anything — the CP form starts with it on.
+
+Each refused row is reported with its line number and the reason: an unknown site, a status Friend
+doesn't send, a destination off the site, a destination that is the source itself, a duplicate of an
+earlier line. Good rows still import. A file is capped at 2 MB and 10,000 rows; split anything
+bigger.
+
+**Export CSV** on the Pins screen (or `php craft friend/pins/export`) writes
+`from,to,status,site,enabled,pointsAt`, the same columns the importer reads. An entry pin exports
+as the entry's current path. A cell that a spreadsheet would run as a formula (one starting with
+`=`, `+`, `-`, `@`, a tab or a carriage return) is written with a leading apostrophe, and the
+importer strips it again.
+
+Importing and exporting need **Create and edit pins**.
 
 ## The tester
 
@@ -138,6 +188,8 @@ php craft friend/match/rules                                # the rule set in ev
 php craft friend/log [--limit=25] [--unresolved]            # the busiest 404s
 php craft friend/log/prune                                  # apply the retention settings now
 php craft friend/log/clear                                  # empty the log
+php craft friend/pins/import <file> [--site=handle] [--update] [--dry-run] [--link-elements=0] [--allow-external]
+php craft friend/pins/export [file] [--site=handle]         # to a file, or standard output
 ```
 
 `friend/match/test` is the tester without a browser. It resolves against the primary site unless
@@ -161,6 +213,10 @@ $ php craft friend/match/test blog/2019/our-new-offices
 
 `friend/log` lists rows by hit count, with totals at the top. `friend/log/clear` asks for
 confirmation; add `--interactive=0` to skip it in a script.
+
+`friend/pins/import` prints a summary and every refused row with its line number, and exits `65`
+when any row was refused, so a deploy script can stop on it. See
+[Importing and exporting pins](#importing-and-exporting-pins) for the columns and the rules.
 
 ## Caching
 

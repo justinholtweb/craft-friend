@@ -1,0 +1,123 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% set title = "Import pins"|t('friend') %}
+{% set selectedSubnavItem = 'pins' %}
+{% set crumbs = [{ label: "Pins"|t('friend'), url: url('friend/pins') }] %}
+{% do view.registerAssetBundle('justinholtweb\\friend\\web\\assets\\cp\\CpAsset') %}
+
+{% block content %}
+    {% if result and not result.fileError %}
+        <div class="friend-summary">
+            <div class="friend-stat">
+                <span class="friend-stat-number">{{ result.rows }}</span>
+                <span class="friend-stat-label">{{ "Rows read"|t('friend') }}</span>
+            </div>
+            <div class="friend-stat friend-stat--good">
+                <span class="friend-stat-number">{{ result.created }}</span>
+                <span class="friend-stat-label">{{ (result.dryRun ? "Would be created" : "Created")|t('friend') }}</span>
+            </div>
+            <div class="friend-stat">
+                <span class="friend-stat-number">{{ result.updated }}</span>
+                <span class="friend-stat-label">{{ (result.dryRun ? "Would be updated" : "Updated")|t('friend') }}</span>
+            </div>
+            <div class="friend-stat">
+                <span class="friend-stat-number">{{ result.skipped }}</span>
+                <span class="friend-stat-label">{{ "Already pinned, left alone"|t('friend') }}</span>
+            </div>
+            <div class="friend-stat">
+                <span class="friend-stat-number">{{ result.errors|length }}</span>
+                <span class="friend-stat-label">{{ "Refused"|t('friend') }}</span>
+            </div>
+        </div>
+
+        {% if result.linked %}
+            <p class="light">{{ "{count} of them point at an entry, so the redirect follows the entry if its URI changes."|t('friend', { count: result.linked }) }}</p>
+        {% endif %}
+
+        {% if result.errors|length %}
+            <table class="data fullwidth">
+                <thead>
+                    <tr>
+                        <th class="thin">{{ "Line"|t('friend') }}</th>
+                        <th>{{ "Why it was refused"|t('friend') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line, message in result.errors %}
+                        <tr>
+                            <td class="thin"><code>{{ line }}</code></td>
+                            <td>{{ message }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <hr>
+    {% endif %}
+
+    <p class="light">
+        {{ "Bring an old site’s redirect map in as pins, so the redirects you already know are answered before any rule guesses. Columns are read by header — `from` and `to`, or the names Retour, Redirect Manager and most spreadsheets use, plus optional `status`, `site` and `enabled`. A file with no header is read as `from,to,status`."|t('friend')|md(inlineOnly=true) }}
+    </p>
+    <p class="light">
+        {{ "Destinations must be on this site: a path, or a full URL on one of this site’s hosts. Pattern (regex) redirects are refused — write those as rules. Up to {rows} rows and {kb} KB per file."|t('friend', { rows: maxRows|number, kb: maxKb })|md(inlineOnly=true) }}
+    </p>
+
+    <form method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+        {{ csrfInput() }}
+        {{ actionInput('friend/pins/upload') }}
+
+        {{ forms.fileField({
+            first: true,
+            label: "CSV file"|t('friend'),
+            id: 'file',
+            name: 'file',
+            inputAttributes: { accept: '.csv,text/csv,text/plain', required: true },
+        }) }}
+
+        {{ forms.selectField({
+            label: "Site"|t('app'),
+            instructions: "For rows without a `site` column."|t('friend'),
+            id: 'siteId',
+            name: 'siteId',
+            options: siteOptions,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: "Point at entries"|t('friend'),
+            instructions: "When a destination is an entry’s URI, pin the entry instead of the path, so the redirect follows it if the URI changes."|t('friend'),
+            id: 'linkElements',
+            name: 'linkElements',
+            on: true,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: "Overwrite existing pins"|t('friend'),
+            instructions: "Otherwise a URI that already has a pin is left alone."|t('friend'),
+            id: 'update',
+            name: 'update',
+        }) }}
+
+        {% if canAllowExternal %}
+            {{ forms.lightswitchField({
+                label: "Allow destinations on other hosts"|t('friend'),
+                instructions: "Admins only. Leave this off unless you have read the file: every row could send your visitors anywhere."|t('friend'),
+                id: 'allowExternal',
+                name: 'allowExternal',
+            }) }}
+        {% endif %}
+
+        {{ forms.lightswitchField({
+            label: "Dry run"|t('friend'),
+            instructions: "Check every row and report, without saving anything."|t('friend'),
+            id: 'dryRun',
+            name: 'dryRun',
+            on: result ? result.dryRun : true,
+        }) }}
+
+        <div class="buttons">
+            <button type="submit" class="btn submit">{{ "Import"|t('friend') }}</button>
+        </div>
+    </form>
+{% endblock %}

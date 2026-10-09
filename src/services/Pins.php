@@ -80,7 +80,11 @@ class Pins extends Component
         return $row ? new Pin($row) : null;
     }
 
-    public function savePin(Pin $pin, bool $runValidation = true): bool
+    /**
+     * @param bool $clearCaches Forget every cached decision afterwards. An import saving thousands of
+     * pins passes false and clears once at the end.
+     */
+    public function savePin(Pin $pin, bool $runValidation = true, bool $clearCaches = true): bool
     {
         if ($runValidation && !$pin->validate()) {
             return false;
@@ -112,7 +116,9 @@ class Pins extends Component
         $pin->id = (int)$record->id;
         $pin->uid = $record->uid;
 
-        Plugin::getInstance()->getMatcher()->clearCaches();
+        if ($clearCaches) {
+            Plugin::getInstance()->getMatcher()->clearCaches();
+        }
 
         return true;
     }

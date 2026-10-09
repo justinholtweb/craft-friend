@@ -50,6 +50,12 @@ exactly what `Element::getUrl()` does.
 - `rules` — the ordered set, memoised
 - `pins` — exact stored answers; `Pins::hash()` is the shared `(siteId, uri)` key for pins *and*
   the log
+- `pinTransfer` — pins in and out of CSV (`friend/pins/import|export`, CP **Import CSV**). Reading
+  and writing live in `helpers\Csv` (size/row caps, delimiter sniffing, formula-cell guard and its
+  inverse); validation in the service. **Imported destinations must be same-site** — a path, or an
+  http(s) URL on one of the install's site hosts (port and `www.` ignored) rewritten to a path —
+  because an imported pin is a redirect; `allowExternal` is admin-only in the CP. `pointsAt` in the
+  export keeps an export→import round trip exact
 - `matcher` — guards, deference, resolution, caching, and the outcome for the request in flight
 - `candidates` — retrieval and scoring
 - `log` — aggregated per `(siteId, uri)` with a hit counter, pruned by age and row cap on GC
@@ -95,6 +101,11 @@ the cache stores a decision and not a candidate list.
 - **Cross-database upsert with a `hits + 1` expression is not worth it.** The expression forms
   differ between MySQL and Postgres; a read-then-write that loses a count to a race on a 404
   counter is much the cheaper bug.
+- **The harness's site base URL carries a port** (`https://plugin-testing.ddev.site:33001/`), and a
+  redirect map exported from production has none — so same-site host checks compare hosts without
+  the port (or a leading `www.`).
+- **`craft\web\Controller` has no `getCurrentUser()`** on Craft 5.3 — it is a 500 at render time.
+  `Craft::$app->getUser()->getIsAdmin()`.
 - **`ddev exec` runs under `set -u`** and can leave the project stopped;
   `docker exec -w /var/www/html ddev-plugin-testing-web …` is the reliable way to script the
   harness.
@@ -107,6 +118,8 @@ No local PHP on this Mac. Everything runs inside the plugin-testing container:
 
 ```sh
 docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friend/tests/integration/checks.php   # 132 checks
+docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friend/tests/integration/pins-csv.php      # 51 — CSV import/export + console
+docker exec -w /var/www/html ddev-plugin-testing-web php /var/www/craft-friend/tests/integration/pins-csv-http.php # 18 — upload/export permission, POST, CSRF
 docker exec ddev-plugin-testing-web bash -c 'find /var/www/craft-friend/src -name "*.php" -print0 | xargs -0 -n1 php -l'
 ```
 

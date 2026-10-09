@@ -116,6 +116,12 @@ row. A pin is a stored exact answer, checked before any rule, costing one indexe
 escape hatch for the one URL the scoring gets wrong, without making the rules worse for every
 other URL.
 
+Migrating from another site? **Pins → Import CSV** (or `php craft friend/pins/import`) takes the
+old redirect map — `from,to` columns, or the headers Retour and Redirect Manager export — so the
+redirects you already know live alongside the guesses. Every row is checked, destinations must stay
+on your own site unless an admin says otherwise, and a dry run shows what would happen first.
+Export writes the same columns back out, with formula cells defused for spreadsheets.
+
 ## In your 404 template
 
 Set a rule's action to **Suggestions** — or just let a rule decline — and offer the near-misses
@@ -183,6 +189,8 @@ php craft friend/match/rules                                # the rule set in ev
 php craft friend/log [--limit=25] [--unresolved]            # the busiest 404s
 php craft friend/log/prune                                  # apply the retention settings now
 php craft friend/log/clear                                  # empty the log
+php craft friend/pins/import <file> [--dry-run] [--update]  # pins from a CSV redirect map
+php craft friend/pins/export [file]                         # pins to CSV
 ```
 
 ## Performance
@@ -199,7 +207,7 @@ php craft friend/log/clear                                  # empty the log
 | permission | what it allows |
 | --- | --- |
 | View the 404 log | the log and the tester, read-only |
-| Create and edit pins | pins, and the **Pin** button on the log |
+| Create and edit pins | pins, the **Pin** button on the log, and pin CSV import/export |
 | Create and edit rules | the rule set, and clearing the log |
 
 ## Licence
