@@ -2,8 +2,7 @@
 
 All notable changes to Friend are documented here.
 
-## Unreleased
-
+## 5.1.0 — 2026-10-09
 ### Added
 
 - **Pin import and export (CSV).** **Pins → Import CSV** and `php craft friend/pins/import` bring
